@@ -57,7 +57,6 @@ int main() {
 			else ++itr;
 		}
 	}
-	
 	for (auto o : order) {
 		cout << killdfs(o) << endl;
 	}
