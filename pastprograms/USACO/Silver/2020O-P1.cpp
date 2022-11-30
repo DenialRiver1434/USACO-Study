@@ -1,32 +1,33 @@
-#include <fstream>
-#include <algorithm>
-#include <tuple>
-#include <vector>
-#include <cmath>
+#define pb push_back
+#define mt make_tuple
+#define is insert
+#define ll long long
+#include <bits/stdc++.h>
 using namespace std;
-long long N, M, a, b;
-vector<tuple<int, int>> intervals;
 
-bool test(long long n) {
-    long long cows = 0;
-    long long ending = -1000000000000000000;
-    for (auto pair : intervals){
-        long long a = get<0>(pair), b = get<1>(pair);
-        a = max(a, ending + n);
-        long long temp = 0;
-        if(b >= a) {
-            long long add = max(temp, 1 + (b - a) / n);
-            cows += add;
-            ending = a + (add - 1) * n;
+ll N, M, a, b;
+vector<tuple<ll, ll>> intervals;
+
+bool test (ll num) {
+    ll prev = -1e18;
+    ll count = 0;
+    for (auto pair : intervals) {
+        ll left = get<0>(pair), right = get<1>(pair), start = prev + num;
+        if(start > right) continue;
+        else {
+            start = max(start, left);
+            ll movement = (right - start) / num + 1;
+            count += movement;
+            prev = start + (movement - 1) * num;
         }
     }
-    return cows >= N;
+    return (count >= N);
 }
 
-int last_true(int lo, int hi) {
+ll last_true(ll lo, ll hi) {
 	lo--;
 	while (lo < hi) {
-		int mid = lo + (hi - lo + 1) / 2;
+		ll mid = lo + (hi - lo + 1) / 2;
 		if (test(mid)) lo = mid;
 		else hi = mid - 1;
 	}
@@ -35,15 +36,15 @@ int last_true(int lo, int hi) {
 
 int main() {
     ifstream fin;
-    fin.open("socdist.in");
     ofstream fout;
+    fin.open("socdist.in");
     fout.open("socdist.out");
 
     fin >> N >> M;
     for (long long i = 0; i < M; i ++){
         fin >> a >> b;
-        intervals.push_back(make_tuple(a, b));
+        intervals.pb(mt(a, b));
     }
     sort(intervals.begin(), intervals.end());
-    fout << last_true(1, get<1>(intervals[M-1])) << endl;
+    fout << last_true(1, get<1>(intervals[M - 1])) << endl;
 }
