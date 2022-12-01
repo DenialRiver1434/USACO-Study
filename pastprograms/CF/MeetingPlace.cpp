@@ -1,35 +1,44 @@
-#include <vector>
-#include <iostream>
+#define pb push_back
+#define mt make_tuple
+#define is insert
+#define ll long long
+#include <bits/stdc++.h>
 using namespace std;
 
-int N, a;
-vector<int> loc, vel;
+double N, a;
+vector<double> speeds, dists;
 
-double test(double n){
-    double worst = 0;
-    for(int i = 0; i < N; i ++) {
-        double time = abs(loc[i] - n) / vel[i];
-        if(time > worst) worst = time;
-    }
-    return worst;
+bool test (double num) {
+	double lhs = 0, rhs = 1e9;
+    for (double i = 0; i < N; i ++) {
+		double left = dists[i] - (speeds[i] * num), right = dists[i] + (speeds[i] * num);
+		lhs = max(lhs, left);
+		rhs = min(rhs, right);
+	}
+	return (lhs < rhs);
+}
+
+double first_true(double lo, double hi) {
+	for (double i = 0; i < 100; i ++) {
+		double mid = (hi + lo) / 2;
+		if (test(mid)) {
+			hi = mid;
+		} else {
+			lo = mid;
+		}
+	}
+	return lo;
 }
 
 int main() {
     cin >> N;
-    for(int i = 0; i < N; i ++) {
-        cin >> a;
-        loc.push_back(a);
-    }
-    for(int i = 0; i < N; i ++) {
-        cin >> a;
-        vel.push_back(a);
-    }
-    double lb = 1, ub = 1000000000;
-    for(int i = 0; i < 120; i ++) {
-        double mid1 = (2 * lb + ub) / 3;
-        double mid2 = (lb + 2 * ub) / 3;
-        if(test(mid1) < test(mid2)) ub = mid2;
-        else lb = mid1;
-    }
-    cout << test(lb);
+	for (double i = 0; i < N; i ++) {
+		cin >> a;
+		dists.pb(a);
+	}
+	for (double i = 0; i < N; i ++) {
+		cin >> a;
+		speeds.pb(a);
+	}
+    cout << fixed << setprecision(7) << first_true(0, 1e9) << endl;
 }
