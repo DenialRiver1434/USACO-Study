@@ -1,57 +1,58 @@
-#include <fstream>
-#include <tuple>
-#include <set>
-#include <vector>
+#define pb push_back
+#define mt make_tuple
+#define is insert
+#define ll long long
+#include <bits/stdc++.h>
 using namespace std;
 
 int N, M, a, b;
-vector<int> connections[100001];
-bool searched[100001];
 vector<tuple<int, int>> coords;
-vector<vector<int>> societies;
-vector<int> searching;
+vector<int> conn[100000];
+int color[100000];
+vector<int> rcolor[100001];
 
-void dfs(int pos) {
-    searched[pos] = true;
-    searching.push_back(pos);
-    for (auto i : connections[pos]) { 
-        if(!searched[i]) dfs(i);
-    }
+void fill(int pos, int col) {
+	if(color[pos]) return;
+	color[pos] = col;
+	rcolor[col].pb(pos);
+	for (auto c : conn[pos]) fill(c, col);
 }
 
-int main() {   
-    ifstream fin;
-    fin.open("fenceplan.in");
-    ofstream fout;
-    fout.open("fenceplan.out");
-    
-    fin >> N >> M;
+int main() {
+	ifstream fin;
+	ofstream fout;
+	fin.open("fenceplan.in");
+	fout.open("fenceplan.out");
 
-    for (int i = 0; i < N; i ++) {
-        fin >> a >> b;
-        coords.push_back(make_tuple(a, b));
-    }
-
-    for (int i = 0; i < M; i ++) {
-        fin >> a >> b;
-        connections[a].push_back(b);
-        connections[b].push_back(a);
-    }
-
-    for (int i = 1; i < N + 1; i ++) {
-        if(searched[i]) continue;
-        searching.clear();
-        dfs(i);
-        societies.push_back(searching);
-    }
-    int best = 1000000000;
-    for (auto society : societies) {
-        int hx = 0, lx = 1000000000, hy = 0, ly = 1000000000;
-        for (auto cow : society) {
-            int a = get<0>(coords[cow - 1]), b = get<1>(coords[cow - 1]);
-            hx = max(hx, a); lx = min(lx, a); hy = max(hy, b); ly = min(ly, b);
-        }
-        best = min(best, abs(hx - lx) + abs(hy - ly));
-    }
-    fout << best * 2;
+	fin >> N >> M;
+	for (int i = 0; i < N; i ++) {
+		fin >> a >> b;
+		coords.pb(mt(a, b));
+		color[i] = 0;
+	}
+	while (M --) {
+		fin >> a >> b;
+		conn[a - 1].pb(b - 1);
+		conn[b - 1].pb(a - 1);
+	}
+	int col = 0;
+	for (int i = 0; i < N; i ++) {
+		if(color[i] == 0) {
+			col ++;
+			fill(i, col);
+		}
+	}
+	int best = 1e9;
+	for (int i = 1; i <= col; i ++) {
+		int maxx = 0, maxy = 0, minx = 1e9, miny = 1e9;
+		for (auto c : rcolor[i]) {
+			int x = get<0>(coords[c]), y = get<1>(coords[c]);
+			maxx = max(x, maxx);
+			minx = min(x, minx);
+			maxy = max(y, maxy);
+			miny = min(y, miny);
+		}
+		best = min(best, (maxx - minx + maxy - miny) * 2);
+	}
+	fout << best;
 }
