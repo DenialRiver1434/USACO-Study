@@ -1,37 +1,43 @@
+#define pb push_back
+#define mt make_tuple
+#define is insert
+#define ll long long
 #include <bits/stdc++.h>
 using namespace std;
 
-bool reachable[501][501];
-int order[501][501];
-vector<int> paths[501];
+bool possible[500][500], reachable[500][500];
+int grid[500][500];
 int N, a;
 
-void dfs(int origin, int loc) {
-	if(reachable[origin][loc]) return;
-	reachable[origin][loc] = true;
-	vector<int> conn = paths[loc];
-	for (auto c : conn) dfs(origin, c);
+void dfs (int pos, int start) {
+	if(reachable[start][pos]) return;
+	reachable[start][pos] = true;
+	for (int i = 0; i < N; i ++) {
+		if(possible[pos][i]) dfs(i, start);
+	}
 }
 
 int main() {
 	cin >> N;
-	for (int i = 1; i <= N; i ++) {
-		bool found = false;
+	for (int i = 0; i < N; i ++) {
+		bool pos = true;
 		for (int j = 0; j < N; j ++) {
 			cin >> a;
-			order[i][j] = a;
-			if(!found) paths[a].push_back(i);
-			if(i == a) found = true;
+			grid[i][j] = a;
+			if(pos) possible[i][a - 1] = true;
+			if((a - 1) == i) pos = false;
 		}
 	}
-	for (int i = 1; i <= N; i ++) {
+	
+	for (int i = 0; i < N; i ++) {
 		dfs(i, i);
 	}
-	for (int i = 1; i <= N; i ++) {
-		for (int j = 0; j <= N; j ++){
-			int pref = order[i][j];
-			if(reachable[i][pref]) {
-				cout << pref << endl;
+	
+	for (int i = 0; i < N; i ++) {
+		for (int j = 0; j < N; j ++) {
+			int target = grid[i][j] - 1;
+			if(reachable[target][i]) {
+				cout << target + 1 << endl;
 				break;
 			}
 		}
