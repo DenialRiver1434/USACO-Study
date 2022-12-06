@@ -6,6 +6,7 @@
 using namespace std;
 
 int N;
+ios_base::sync_with_stdio(0); cin.tie(nullptr);
 
 int lowerbound(vector<int> array, int x){
     return lower_bound(array.begin(), array.end(), x) - array.begin();
