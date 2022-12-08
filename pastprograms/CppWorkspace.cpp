@@ -1,4 +1,5 @@
 #define pb push_back
+#define mp make_pair
 #define mt make_tuple
 #define is insert
 #define ll long long

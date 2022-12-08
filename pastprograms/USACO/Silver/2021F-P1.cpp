@@ -1,80 +1,62 @@
+#define pb push_back
+#define mp make_pair
+#define mt make_tuple
+#define is insert
+#define ll long long
 #include <bits/stdc++.h>
 using namespace std;
 
-map<int, set<tuple<int, int>>> listofn;
-map<tuple<int, int>, int> numadjacent;
-set<tuple<int, int>> added;
-int N, a, b, addedlen = 0;
+int N, a, b, cur = 0;
+bool filled[2010][2010];
+queue<pair<int, int>> pending;
 
-int countadjacent (tuple<int, int> x) {
-	int c = 0;
-	int a = get<0>(x), b = get<1>(x);
-	if(added.find(make_tuple(a + 1, b)) != added.end()) c ++;
-	if(added.find(make_tuple(a - 1, b)) != added.end()) c ++;
-	if(added.find(make_tuple(a, b + 1)) != added.end()) c ++;
-	if(added.find(make_tuple(a, b - 1)) != added.end()) c ++;
-	return c;
+bool problem (pair<int, int> inp) {
+    int c = 0;
+    if(!filled[inp.first][inp.second]) return false;
+    c += filled[inp.first - 1][inp.second];
+    c += filled[inp.first][inp.second - 1]; 
+    c += filled[inp.first + 1][inp.second];
+    c += filled[inp.first][inp.second + 1]; 
+    return (c == 3);
 }
 
-void add (tuple<int, int> x) {
-	int a = get<0>(x), b = get<1>(x);
-	if(added.find(x) == added.end()){
-		added.insert(x);
-		addedlen ++;
-		int adj = countadjacent(x);
-		numadjacent[x] = adj;
-		listofn[adj].insert(x);
-		tuple<int, int> temp = make_tuple(a + 1, b);
-		if(added.find(temp) != added.end()) {
-			listofn[numadjacent[temp]].erase(temp);
-			int a = countadjacent(temp);
-			numadjacent[temp] = a;
-			listofn[a].insert(temp);
-		}
-		temp = make_tuple(a - 1, b);
-		if(added.find(make_tuple(a - 1, b)) != added.end()) {
-			listofn[numadjacent[temp]].erase(temp);
-			int a = countadjacent(temp);
-			numadjacent[temp] = a;
-			listofn[a].insert(temp);
-		}
-		temp = make_tuple(a, b + 1);
-		if(added.find(make_tuple(a, b + 1)) != added.end()) {
-			listofn[numadjacent[temp]].erase(temp);
-			int a = countadjacent(temp);
-			numadjacent[temp] = a;
-			listofn[a].insert(temp);
-		}
-		temp = make_tuple(a, b - 1);
-		if(added.find(make_tuple(a, b - 1)) != added.end()) {
-			listofn[numadjacent[temp]].erase(temp);
-			int a = countadjacent(temp);
-			numadjacent[temp] = a;
-			listofn[a].insert(temp);
-		}
-	}
+void add (int a, int b) {
+    cur ++;
+    filled[a][b] = true;
+    pending.push(mp(a, b));
+    pending.push(mp(a - 1, b));
+    pending.push(mp(a + 1, b));
+    pending.push(mp(a, b - 1));
+    pending.push(mp(a, b + 1));
 }
 
-tuple<int, int> checkmissing (tuple<int, int> x) {
-	int a = get<0>(x), b = get<1>(x);
-	if(added.find(make_tuple(a + 1, b)) == added.end()) return make_tuple(a + 1, b);
-	if(added.find(make_tuple(a - 1, b)) == added.end()) return make_tuple(a - 1, b);
-	if(added.find(make_tuple(a, b + 1)) == added.end()) return make_tuple(a, b + 1);
-	if(added.find(make_tuple(a, b - 1)) == added.end()) return make_tuple(a, b - 1);
-	else throw invalid_argument("No adjacencies");
+pair<int, int> missing (int a, int b) {
+    filled[a][b] = true;
+    if(!filled[a - 1][b]) return mp(a - 1, b);
+    if(!filled[a + 1][b]) return mp(a + 1, b);
+    if(!filled[a][b - 1]) return mp(a, b - 1);
+    else return mp(a, b + 1);
 }
 
-int main () {
-	cin >> N;
-	for (int i = 0; i < N; i ++) {
-		cin >> a >> b;
-		add(make_tuple(a, b));
-		while(!listofn[3].empty()) {
-			auto count = listofn[3].begin();
-			tuple<int, int> victim = *count;
-			tuple<int, int> missing = checkmissing(victim);
-			add(missing);
-		}
-		cout << addedlen - i - 1 << endl;
-	}
+int main() {
+    cin >> N;
+    for (int i = 0; i < N; i ++) {
+        cin >> a >> b;
+        a += 502; b += 502;
+
+        cur --;
+        if(filled[a][b]) cur --;
+        else filled[a][b] = true;
+        add(a, b);
+        filled[a][b] = true;
+        while(pending.size()) {
+            auto pair = pending.front();
+            pending.pop();
+            if(problem(pair)) {
+                auto tup = missing(pair.first, pair.second);
+                add(tup.first, tup.second);
+            }
+        }
+        cout << cur << endl;
+    }
 }
