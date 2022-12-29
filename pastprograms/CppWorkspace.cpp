@@ -36,6 +36,31 @@ ll last_true(ll lo, ll hi) {
 	return lo;
 }
 
+map<ll, ll> primefactorize(ll N) {
+    map<ll, ll> primefactors;
+    ll tester = 2, c;
+    while (N != 1) {
+        c = 0;
+        while ((tester * tester) <= N) {
+            if((N % tester) == 0) {
+                c = 0;
+                while ((N % tester) == 0) {
+                    N /= tester;
+                    c ++;
+                }
+                primefactors[tester ++] = c;
+                break;
+            }
+            tester ++;
+        }
+        if (!c) {
+            primefactors[N] = 1;
+            break;
+        }
+    }
+    return primefactors;
+}
+
 void twodcoordcomp() {
 	int getCompressedIndex(int a, vector<int> indices) {
 		return lower_bound(indices.begin(), indices.end(), a) - indices.begin();
