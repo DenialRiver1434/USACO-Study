@@ -3,6 +3,7 @@
 #define mt make_tuple
 #define is insert
 #define ll long long
+#define for_loop(i, begin, n) for (int i = begin; i < n; i ++)
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -47,6 +48,33 @@ vector<int> factor(int n) {
 	if (n > 1) ret.push_back(n);
 	return ret;
 }
+
+void SieveOfEratosthenes(int n) {
+    bool prime[n + 1];
+    memset(prime, true, sizeof(prime));
+ 
+    for (int p = 2; p * p <= n; p++) {
+        if (prime[p] == true) {
+            for (int i = p * p; i <= n; i += p)
+                prime[i] = false;
+        }
+    }
+}
+
+// MODULAR ARITHMETIC
+
+ll powermod (ll a, ll b, ll mod) { // 1000000007
+    if (b == 0) return 1;
+    else if ((b % 2) == 1) {
+        ll pma = powermod (a, b / 2, mod);
+        return (((pma * pma) % mod) * a) % mod;
+    }
+    else {
+        ll pma = powermod (a, b / 2, mod);
+        return (pma * pma) % mod;
+    }
+}
+
 
 // DSU
 struct DSU {

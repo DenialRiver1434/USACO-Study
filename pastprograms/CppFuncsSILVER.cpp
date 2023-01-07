@@ -3,6 +3,7 @@
 #define mt make_tuple
 #define is insert
 #define ll long long
+#define for_loop(i, begin, n) for (int i = begin; i < n; i ++)
 #include <bits/stdc++.h>
 using namespace std;
 
