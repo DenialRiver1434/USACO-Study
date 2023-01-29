@@ -18,8 +18,6 @@ int evaluate (int N, vector<int> nums) {
     return c;
 }
 
-// Main
-
 void solve () {
     ios_base::sync_with_stdio(0); cin.tie(nullptr);
     int N, K, C1 = 0;
