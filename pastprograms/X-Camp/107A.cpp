@@ -17,7 +17,7 @@ int main () {
         nums.is(a);
         if(a == 1) c1 ++;
         if((a % 2) == 0) evens.pb(a);
-    }
+    } // test
     sort(evens.begin(), evens.end());
 
     int es = evens.size();
