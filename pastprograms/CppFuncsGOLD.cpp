@@ -63,18 +63,17 @@ void SieveOfEratosthenes(int n) {
 
 // MODULAR ARITHMETIC
 
-ll powermod (ll a, ll b, ll mod) { // 1000000007
-    if (b == 0) return 1;
-    else if ((b % 2) == 1) {
-        ll pma = powermod (a, b / 2, mod);
-        return (((pma * pma) % mod) * a) % mod;
-    }
-    else {
-        ll pma = powermod (a, b / 2, mod);
-        return (pma * pma) % mod;
-    }
+ll powermod(ll base, ll exp, ll MOD) {
+	base %= MOD;
+	ll result = 1;
+	while (exp > 0) {
+		if (exp % 2 == 1) // if n is odd
+			result = result * base % MOD;
+		base = base * base % MOD;
+		exp /= 2; // divide by two
+	}
+	return result;
 }
-
 
 // DSU
 struct DSU {
