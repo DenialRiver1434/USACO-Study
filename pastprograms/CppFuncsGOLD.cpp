@@ -37,6 +37,8 @@ map<ll, ll> primefactorize(ll N) {
     return primefactors;
 }
 
+// FACTORS
+
 vector<int> factor(int n) {
 	vector<int> ret;
 	for (int i = 2; i * i <= n; i++) {
@@ -61,9 +63,11 @@ void SieveOfEratosthenes(int n) {
     }
 }
 
-// MODULAR ARITHMETIC
+// MOD, COMBO
 
-ll powermod(ll base, ll exp, ll MOD) {
+ll MOD = 1e9 + 7;
+
+ll powermod(ll base, ll exp) {
 	base %= MOD;
 	ll result = 1;
 	while (exp > 0) {
@@ -73,6 +77,22 @@ ll powermod(ll base, ll exp, ll MOD) {
 		exp /= 2; // divide by two
 	}
 	return result;
+}
+
+ll nPk(ll n, ll k) {
+    ll c = 1;
+    if(k == 0) return 1;
+    for (int i = (n - k + 1); i <= n; i ++) {
+        c = (c * i) % MOD;
+    }
+    return c;
+}
+
+ll nCk(ll n, ll k) {
+    if(k == 0 || (n == k)) return 1;
+    ll c = nPk(n, k);
+    c = (c * powermod(nPk(k, k), MOD - 2));
+    return c;
 }
 
 // DSU
@@ -95,3 +115,29 @@ struct DSU {
 	}
 };
 
+// DIJKSTRA'S
+
+vector<pair<int, int>> conn[100000];
+ll dist[100000];
+
+void dijkstra(int src) {  // Updates dist, src = starting
+	for (int i = 0; i < N; ++i) dist[i] = LLONG_MAX;
+	
+	using T = pair<ll, int>;
+	priority_queue<T, vector<T>, greater<T>> pq;
+	dist[src] = 0;  
+	pq.push({0, src});
+
+	while (pq.size()) {
+		ll cdist;
+		int node;
+		tie(cdist, node) = pq.top();
+		pq.pop();
+		if (cdist != dist[node]) continue;
+		for (pair<int, int> i : conn[node]) {
+			if (cdist + i.second < dist[i.first]) {
+				pq.push({dist[i.first] = cdist + i.second, i.first});
+			}
+		}
+	}
+}
