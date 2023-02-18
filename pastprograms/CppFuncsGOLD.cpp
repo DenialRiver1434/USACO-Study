@@ -117,7 +117,7 @@ struct DSU {
 
 // DIJKSTRA'S
 
-vector<pair<int, int>> conn[100000];
+vector<pair<int, int>> conn[100000]; // location, distance
 ll dist[100000];
 
 void dijkstra(int src) {  // Updates dist, src = starting
