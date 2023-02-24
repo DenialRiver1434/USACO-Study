@@ -64,6 +64,12 @@ void SieveOfEratosthenes(int n) {
     }
 }
 
+// KNAPSACK
+// Order does not matter -> Coins loop outside
+// Else -> Space loop outside
+// Infinite coins -> Space loop left to right
+// 1 of each / multiple of each -> Space loop right to left
+
 // MOD, COMBO
 
 ll MOD = 1e9 + 7;
