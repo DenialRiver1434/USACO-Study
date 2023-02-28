@@ -13,38 +13,39 @@ int N, M;
 bool searched[100000];
 vector<int> conn[100000];
 vector<int> sorted;
-set<int> searching;
-bool flag = false;
 
 void dfs (int i) {
-	if(flag) return;
 	if(searched[i]) return;
 	searched[i] = true;
-	searching.is(i);
 	for (auto c : conn[i]) {
-		if(searching.find(c) != searching.end()) {
-			cout << "IMPOSSIBLE" << endl;
-			flag = true;
-			return;
-		}
 		dfs(c);
 	}
-	searching.erase(i);
 	sorted.pb(i);
 }
 
 int main () {
 	ios_base::sync_with_stdio(0); cin.tie(nullptr);
+	vector<pair<int, int>> inps;
 	cin >> N >> M;
 	f0r (i, 0, M) {
 		int a, b; cin >> a >> b;
 		conn[a - 1].pb(b - 1);
+		inps.pb(mp(a - 1, b - 1));
 	}
 	f0r (i, 0, N) {
 		dfs(i);
-		if(flag) return 0;
 	}
 	reverse(sorted.begin(), sorted.end());
+	map<int, int> positions;
+	f0r (i, 0, N) {
+		positions[sorted[i]] = i;
+	}
+	for (auto p : inps) {
+		if(positions[p.first] > positions[p.second]) {
+			cout << "IMPOSSIBLE" << endl;
+			return 0;
+		}
+	}
 	for (auto s : sorted) {
 		cout << s + 1 << " ";
 	}
