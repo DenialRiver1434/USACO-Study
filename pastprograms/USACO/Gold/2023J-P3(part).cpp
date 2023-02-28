@@ -11,6 +11,8 @@ using namespace std;
 const ll MOD = 1e9 + 7;
 ll N;
 
+ll fact[1000001];
+
 ll powermod(ll base, ll exp) {
 	base %= MOD;
 	ll result = 1;
@@ -23,41 +25,35 @@ ll powermod(ll base, ll exp) {
 	return result;
 }
 
-ll nPk(ll n, ll k) {
-    ll c = 1;
-    if(k == 0) return 1;
-    for (int i = (n - k + 1); i <= n; i ++) {
-        c = (c * i) % MOD;
-    }
-    return c;
-}
-
 ll nCk(ll n, ll k) {
     if(k == 0 || (n == k)) return 1;
-    ll c = nPk(n, k);
-    c = (c * powermod(nPk(k, k), MOD - 2));
+    ll c = fact[n];
+    c = (c * powermod((fact[k] * fact[n - k]) % MOD, MOD - 2));
     return c % MOD;
 }
 
 int main () {
 	ios_base::sync_with_stdio(0); cin.tie(nullptr);
-	cin >> N;
-	if (N == 1) {
-		cout << 1 << endl;
+
+	fact[0] = 1;
+	f0r (i, 1, 1000001) {
+		fact[i] = fact[i - 1] * i;
+		fact[i] %= MOD;
 	}
-	else {
-		ll a, b; cin >> a >> b;
-		if (a == b) {
-			cout << 1 << endl;
+
+	ll prev, total = 1;
+	cin >> N >> prev;
+	f0r (i, 1, N) {
+		ll cur; cin >> cur;
+		if (prev < cur) {
+			total *= nCk((cur - 1) / 2, (prev - 1) / 2);
+			total %= MOD;
 		}
-		else if (a < b) {
-			a--; b--; // first move must go to right
-			ll far = a / 2, close = (b - a) / 2;
-			cout << nCk (far + close, far) << endl;
+		if (prev > cur) {
+			total *= nCk((prev) / 2, (cur) / 2);
+			total %= MOD;
 		}
-		else {
-			ll close = (a - b) / 2, far = b / 2; 
-			cout << nCk (far + close, far) << endl;
-		}
+		prev = cur;
 	}
+	cout << total << endl;
 }
