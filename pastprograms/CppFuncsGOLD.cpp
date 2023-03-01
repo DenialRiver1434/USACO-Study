@@ -102,6 +102,25 @@ ll nCk(ll n, ll k) {
     return c;
 }
 
+// TOPOLOGICAL SORT (Kahn)
+queue<int> q;
+int N, M, indegree[100000];
+vector<int> conn[100000];
+vector<int> sorted;
+void ts () {
+	f0r (i, 0, N) {
+		if(indegree[i] == 0) q.push(i);
+	}
+	while(!q.empty()) {
+		int pos = q.front();
+		q.pop();
+		sorted.pb(pos);
+		for (auto c : conn[pos]) {
+			if((--indegree[c]) == 0) q.push(c);
+		}
+	}
+}
+
 // DSU
 struct DSU {
 	vector<int> e;
