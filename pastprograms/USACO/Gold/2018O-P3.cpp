@@ -28,31 +28,33 @@ int main () {
 	}
 	sort(cows.begin(), cows.end(), comp);
 
-	map<ll, ll> best;
+	map<ll, ll> past;
+	ll best[M];
+	f0r (i, 0, M) best[i] = -1;
 	best[0] = 0;
 
-	for (auto c : cows) { // from best to worst
-		ll weight = c.first, talent = c.second;
-		vector<ll> tosearch;
-		for (auto b : best) {
-			if(b.first >= M) break;
-			tosearch.pb(b.first);
+	f0r (i, 0, N) {
+		ll movement = cows[i].first;
+		for (ll j = M - 1; j >= movement; j --) {
+			if(best[j - movement] > -1) best[j] = max(best[j], best[j - movement] + cows[i].second);
 		}
-		f0r (i, 0, tosearch.size() / 2) {
-			swap(tosearch[i], tosearch[tosearch.size() / 2 - 1 - i]);
-		}
-
-		for (auto curweight : tosearch) {
-			ll curtalent = best[curweight];
-
-			if(best.find(curweight + weight) == best.end()) {
-				best[curweight + weight] = talent + curtalent;
+		f0r (j, i + 1, N) {
+			ll curmove = cows[j].first;
+			f0r (k, max(0LL, M - curmove), M) {
+				if(best[k] > -1) {
+					if(past.find(k + curmove) != past.end()) {
+						past[k + curmove] = max(past[k + curmove], cows[j].second + best[k]);
+					}
+					else {
+						past[k + curmove] = cows[j].second + best[k];
+					}
+				}
 			}
 		}
 	}
 
 	ll opt = 0;
-	for (auto b : best) {
+	for (auto b : past) {
 		if(b.first >= M) {
 			opt = max(opt, (1000 * b.second) / b.first);
 		}
