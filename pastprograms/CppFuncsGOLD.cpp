@@ -70,6 +70,23 @@ void SieveOfEratosthenes(int n) {
 // Infinite coins -> Space loop left to right
 // 1 of each / multiple of each -> Space loop right to left
 
+// LIS (LEAST INCREASING SUBSEQUENCE)
+
+int find_lis(vector<int> a) {
+	vector<int> dp;
+	for (int i : a) {
+		int pos = lower_bound(dp.begin(), dp.end(), i) - dp.begin();
+		if (pos == dp.size()) {
+			// we can have a new, longer increasing subsequence!
+			dp.push_back(i);
+		} else {
+			// oh ok, at least we can make the ending element smaller
+			dp[pos] = i;
+		}
+	}
+	return dp.size();
+}
+
 // MOD, COMBO
 
 ll MOD = 1e9 + 7;
