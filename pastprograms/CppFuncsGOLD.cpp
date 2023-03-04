@@ -64,7 +64,7 @@ void SieveOfEratosthenes(int n) {
     }
 }
 
-// KNAPSACK
+// KNAPSACK DP
 // Order does not matter -> Coins loop outside
 // Else -> Space loop outside
 // Infinite coins -> Space loop left to right
