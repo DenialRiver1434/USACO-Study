@@ -4,7 +4,7 @@
 #define is insert
 #define ll long long
 #define f0r(i, begin, n) for (ll i = begin; i < n; i ++)
-#define len(x) x.length()
+#define len(x) x.size()
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -85,6 +85,19 @@ int find_lis(vector<int> a) {
 		}
 	}
 	return dp.size();
+}
+
+ll min_lis (vector<ll> a) {
+	vector<ll> A;
+	for (auto x : a) {
+		x = -x;
+		if (A.empty() || x >= A.back()) {
+		A.push_back(x);
+		} else {
+		*upper_bound(A.begin(), A.end(), x) = x;
+		}
+  	}
+	return sz(A);
 }
 
 // MOD, COMBO
