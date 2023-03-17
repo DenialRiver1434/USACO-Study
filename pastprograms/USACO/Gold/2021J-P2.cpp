@@ -63,6 +63,10 @@ int main () {
 		best[pos] = ovlp;
 
 		for (auto c : conn[col]) {
+			if(c == (N - 1)) {
+				cout << ovlp * 2 + N - 1 << endl;
+				return 0;
+			}
 			if(c < pos) {
 				if(best[c] > (ovlp + pos - c)) {
 					best[c] = ovlp + pos - c;
@@ -77,6 +81,5 @@ int main () {
 			}
 		}
 	}
-	if(best[N - 1] == INF) cout << -1 << endl;
-	else cout << best[N - 1] * 2 + N - 1 << endl;
+	cout << -1 << endl;
 }
