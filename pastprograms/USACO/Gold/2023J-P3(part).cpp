@@ -4,56 +4,47 @@
 #define is insert
 #define ll long long
 #define f0r(i, begin, end) for (ll i = begin; i < end; i ++) 
-#define len(x) x.length()
+#define len(x) x.size()
 #include <bits/stdc++.h>
 using namespace std;
 
-const ll MOD = 1e9 + 7;
-ll N;
+int N, M, arrival[200000], delay[200000];
+set<tuple<int, int, int>> conn[200000];
 
-ll fact[1000001];
-
-ll powermod(ll base, ll exp) {
-	base %= MOD;
-	ll result = 1;
-	while (exp > 0) {
-		if (exp % 2 == 1) // if n is odd
-			result = result * base % MOD;
-		base = base * base % MOD;
-		exp /= 2; // divide by two
+void dfs (int pos, int time, bool spec) {
+	if(!spec) {
+		if(arrival[pos] < time) return;
+		time += delay[pos];
 	}
-	return result;
-}
 
-ll nCk(ll n, ll k) {
-    if(k == 0 || (n == k)) return 1;
-    ll c = fact[n];
-    c = (c * powermod((fact[k] * fact[n - k]) % MOD, MOD - 2));
-    return c % MOD;
+	auto nec = conn[pos];
+	auto cut = nec.lower_bound(mt(time, 0, 0));
+	while (cut != nec.end()) {
+		if(arrival[get<1>(*cut)] > get<2>(*cut)) {
+			arrival[get<1>(*cut)] = get<2>(*cut);
+			dfs(get<1>(*cut), get<2>(*cut), 0);
+		}
+		cut ++;
+		nec.erase(prev(cut));
+	}
 }
 
 int main () {
 	ios_base::sync_with_stdio(0); cin.tie(nullptr);
-
-	fact[0] = 1;
-	f0r (i, 1, 1000001) {
-		fact[i] = fact[i - 1] * i;
-		fact[i] %= MOD;
+	cin >> N >> M;
+	f0r (i, 0, N) {
+		arrival[i] = 1e9 + 5;
 	}
-
-	ll prev, total = 1;
-	cin >> N >> prev;
-	f0r (i, 1, N) {
-		ll cur; cin >> cur;
-		if (prev < cur) {
-			total *= nCk((cur - 1) / 2, (prev - 1) / 2);
-			total %= MOD;
-		}
-		if (prev > cur) {
-			total *= nCk((prev) / 2, (cur) / 2);
-			total %= MOD;
-		}
-		prev = cur;
+	arrival[0] = 0;
+	f0r (i, 0, M) {
+		int a, b, c, d; cin >> a >> b >> c >> d;
+		conn[a - 1].is(mt(b, c - 1, d));
 	}
-	cout << total << endl;
+	f0r (i, 0, N) cin >> delay[i];
+	dfs(0, 0, 1);
+
+	f0r (i, 0, N) {
+		if(arrival[i] > 1e9) cout << -1 << endl;
+		else cout << arrival[i] << endl;
+	}
 }
