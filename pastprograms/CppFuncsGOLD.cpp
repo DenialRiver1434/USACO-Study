@@ -5,6 +5,8 @@
 #define ll long long
 #define f0r(i, begin, n) for (ll i = begin; i < n; i ++)
 #define len(x) x.size()
+#define vi vector<int>
+#define vpi vector<pair<int, int>>
 #include <bits/stdc++.h>
 using namespace std;
 
