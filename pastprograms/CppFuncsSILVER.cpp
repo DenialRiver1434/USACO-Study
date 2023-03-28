@@ -3,6 +3,8 @@
 #define mt make_tuple
 #define is insert
 #define ll long long
+#define vi vector<int>
+#define vpi vector<pair<int, int>>
 #define f0r(i, begin, n) for (ll i = begin; i < n; i ++)
 #define len(x) x.length()
 #include <bits/stdc++.h>
