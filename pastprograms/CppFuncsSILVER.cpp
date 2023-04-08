@@ -2,10 +2,10 @@
 #define mp make_pair
 #define mt make_tuple
 #define is insert
-#define ll long long
+#define lll long long
 #define vi vector<int>
 #define vpi vector<pair<int, int>>
-#define f0r(i, begin, n) for (ll i = begin; i < n; i ++)
+#define f0r(i, begin, n) for (lll i = begin; i < n; i ++)
 #define len(x) x.length()
 #include <bits/stdc++.h>
 using namespace std;
@@ -52,10 +52,10 @@ int lowerbound(vector<int> array, int x){
     return lower_bound(array.begin(), array.end(), x) - array.begin();
 }
 
-ll first_true(ll lo, ll hi) {
+lll first_true(lll lo, lll hi) {
 	hi++;
 	while (lo < hi) {
-		ll mid = lo + (hi - lo) / 2;
+		lll mid = lo + (hi - lo) / 2;
 		if (test(mid)) {
 			hi = mid;
 		} else {
@@ -65,10 +65,10 @@ ll first_true(ll lo, ll hi) {
 	return lo;
 }
 
-ll last_true(ll lo, ll hi) {
+lll last_true(lll lo, lll hi) {
 	lo--;
 	while (lo < hi) {
-		ll mid = lo + (hi - lo + 1) / 2;
+		lll mid = lo + (hi - lo + 1) / 2;
 		if (test(mid)) lo = mid;
 		else hi = mid - 1;
 	}

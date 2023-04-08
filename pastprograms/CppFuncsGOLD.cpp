@@ -2,8 +2,8 @@
 #define mp make_pair
 #define mt make_tuple
 #define is insert
-#define ll long long
-#define f0r(i, begin, n) for (ll i = begin; i < n; i ++)
+#define lll long long
+#define f0r(i, begin, n) for (lll i = begin; i < n; i ++)
 #define len(x) x.size()
 #define vi vector<int>
 #define vpi vector<pair<int, int>>
@@ -15,9 +15,9 @@ ios_base::sync_with_stdio(0); cin.tie(nullptr);
 
 // DIVISIBILITY
 
-map<ll, ll> primefactorize(ll N) {
-    map<ll, ll> primefactors;
-    ll tester = 2, c;
+map<lll, lll> primefactorize(lll N) {
+    map<lll, lll> primefactors;
+    lll tester = 2, c;
     while (N != 1) {
         c = 0;
         while ((tester * tester) <= N) {
@@ -82,15 +82,15 @@ int find_lis(vector<int> a) {
 			// we can have a new, longer increasing subsequence!
 			dp.push_back(i);
 		} else {
-			// oh ok, at least we can make the ending element smaller
+			// oh ok, at least we can make the ending element smalller
 			dp[pos] = i;
 		}
 	}
 	return dp.size();
 }
 
-ll min_lis (vector<ll> a) {
-	vector<ll> A;
+lll min_lis (vector<lll> a) {
+	vector<lll> A;
 	for (auto x : a) {
 		x = -x;
 		if (A.empty() || x >= A.back()) {
@@ -104,11 +104,11 @@ ll min_lis (vector<ll> a) {
 
 // MOD, COMBO
 
-ll MOD = 1e9 + 7;
+lll MOD = 1e9 + 7;
 
-ll powermod(ll base, ll exp) {
+lll powermod(lll base, lll exp) {
 	base %= MOD;
-	ll result = 1;
+	lll result = 1;
 	while (exp > 0) {
 		if (exp % 2 == 1) // if n is odd
 			result = result * base % MOD;
@@ -118,8 +118,8 @@ ll powermod(ll base, ll exp) {
 	return result;
 }
 
-ll nPk(ll n, ll k) {
-    ll c = 1;
+lll nPk(lll n, lll k) {
+    lll c = 1;
     if(k == 0) return 1;
     for (int i = (n - k + 1); i <= n; i ++) {
         c = (c * i) % MOD;
@@ -127,9 +127,9 @@ ll nPk(ll n, ll k) {
     return c;
 }
 
-ll nCk(ll n, ll k) {
+lll nCk(lll n, lll k) {
     if(k == 0 || (n == k)) return 1;
-    ll c = nPk(n, k);
+    lll c = nPk(n, k);
     c = (c * powermod(nPk(k, k), MOD - 2));
     return c;
 }
@@ -176,18 +176,18 @@ struct DSU {
 // DIJKSTRA'S
 
 vector<pair<int, int>> conn[100000]; // location, distance
-ll dist[100000];
+lll dist[100000];
 
 void dijkstra(int src) {  // Updates dist, src = starting
-	for (int i = 0; i < N; ++i) dist[i] = LLONG_MAX;
+	for (int i = 0; i < N; ++i) dist[i] = lllONG_MAX;
 	
-	using T = pair<ll, int>;
+	using T = pair<lll, int>;
 	priority_queue<T, vector<T>, greater<T>> pq;
 	dist[src] = 0;  
 	pq.push({0, src});
 
 	while (pq.size()) {
-		ll cdist;
+		lll cdist;
 		int node;
 		tie(cdist, node) = pq.top();
 		pq.pop();
@@ -213,6 +213,6 @@ template <class T> T kruskal(int N, vector<pair<T, pair<int, int>>> edges) {
 }
 int main () {
 	int N; // number of vertices
-	vector<pair<ll, pair<int, int>>> edges; // weight, start, end
-	ll ans = krustal(N, edges);
+	vector<pair<lll, pair<int, int>>> edges; // weight, start, end
+	lll ans = krustal(N, edges);
 }
