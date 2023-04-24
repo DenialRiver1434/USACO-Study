@@ -1,12 +1,14 @@
 #define pb push_back
-#define mp make_pair
 #define mt make_tuple
+#define mp make_pair
 #define is insert
 #define lll long long
-#define vi vector<int>
-#define vpi vector<pair<int, int>>
-#define f0r(i, begin, n) for (lll i = begin; i < n; i ++)
-#define len(x) x.length()
+#define vi vector<lll>
+#define si set<lll>
+#define pii pair<lll, lll>
+#define vpii vector<pair<lll, lll>>
+#define f0r(i, begin, end) for (lll i = begin; i < end; i ++) 
+#define len(x) x.size()
 #include <bits/stdc++.h>
 using namespace std;
 

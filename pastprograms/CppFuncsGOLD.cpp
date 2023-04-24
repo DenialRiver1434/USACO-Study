@@ -1,15 +1,16 @@
 #define pb push_back
-#define mp make_pair
 #define mt make_tuple
+#define mp make_pair
 #define is insert
 #define lll long long
-#define f0r(i, begin, n) for (lll i = begin; i < n; i ++)
+#define vi vector<lll>
+#define si set<lll>
+#define pii pair<lll, lll>
+#define vpii vector<pair<lll, lll>>
+#define f0r(i, begin, end) for (lll i = begin; i < end; i ++) 
 #define len(x) x.size()
-#define vi vector<int>
-#define vpi vector<pair<int, int>>
 #include <bits/stdc++.h>
 using namespace std;
-
 int N;
 ios_base::sync_with_stdio(0); cin.tie(nullptr);
 
@@ -71,6 +72,17 @@ void SieveOfEratosthenes(int n) {
 // Else -> Space loop outside
 // Infinite coins -> Space loop left to right
 // 1 of each / multiple of each -> Space loop right to left
+
+void knapsack () {
+	int weights[n]; for (int i = 0; i < n; i++) cin >> weights[i];
+	bitset<1000001> possible;
+	possible.set(0);
+	for (int i = 0; i < n; i++) {
+		bitset<1000001> temp = possible;
+		temp <<= weights[i];
+		possible = possible | temp;
+	}
+}
 
 // LIS (LEAST INCREASING SUBSEQUENCE)
 
