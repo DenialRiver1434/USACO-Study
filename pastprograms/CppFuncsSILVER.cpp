@@ -3,10 +3,11 @@
 #define mp make_pair
 #define is insert
 #define lll long long
-#define vi vector<lll>
-#define si set<lll>
-#define pii pair<lll, lll>
-#define vpii vector<pair<lll, lll>>
+#define vl vector<lll>
+#define sl set<lll>
+#define msl multiset<lll>
+#define pl pair<lll, lll>
+#define vpl vector<pair<lll, lll>>
 #define f0r(i, begin, end) for (lll i = begin; i < end; i ++) 
 #define len(x) x.size()
 #include <bits/stdc++.h>
