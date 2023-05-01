@@ -224,23 +224,21 @@ template <class T> T kruskal(int N, vector<pair<T, pair<int, int>>> edges) {
 	// -1 if the graph is not connected, otherwise the sum of the edge lengths
 	return (D.size(1) == N ? ans : -1);
 }
-template <class T> class MinSegmentTree {
-  private:
+
+struct MinSegmentTree {
 	/** The operation to use for combining two elements. (Must be associative)
 	 */
-	T comb(T a, T b) { return std::min(a, b); }
-	const T DEFAULT = 1e18;  // Will overflow if T is an int
+	lll comb(lll a, lll b) { return min(a, b); }
+	const lll DEFAULT = 1e18;  // Will overflow if T is an int
 
-	vector<T> segtree;
-	int len;
-
-  public:
-	MinSegmentTree(int len) : len(len), segtree(len * 2, DEFAULT) {}
+	vector<lll> segtree;
+	lll leng;
+	MinSegmentTree(lll leng) : leng(leng), segtree(leng * 2, DEFAULT) {}
 
 	/** Sets the value at ind to val. */
-	void set(int ind, T val) {
-		assert(0 <= ind && ind < len);
-		ind += len;
+	void set(lll ind, lll val) {
+		assert(0 <= ind && ind < leng);
+		ind += leng;
 		segtree[ind] = val;
 		for (; ind > 1; ind /= 2) {
 			segtree[ind >> 1] = comb(segtree[ind], segtree[ind ^ 1]);
@@ -248,10 +246,10 @@ template <class T> class MinSegmentTree {
 	}
 
 	/** @return the minimum element in the range [start, end) */
-	T range_min(int start, int end) {
-		assert(0 <= start && start < len && 0 < end && end <= len);
-		T sum = DEFAULT;
-		for (start += len, end += len; start < end; start /= 2, end /= 2) {
+	lll range_min(lll start, lll end) {
+		assert(0 <= start && start < leng && 0 < end && end <= leng);
+		lll sum = DEFAULT;
+		for (start += leng, end += leng; start < end; start /= 2, end /= 2) {
 			if ((start & 1) != 0) { sum = comb(sum, segtree[start++]); }
 			if ((end & 1) != 0) { sum = comb(sum, segtree[--end]); }
 		}
