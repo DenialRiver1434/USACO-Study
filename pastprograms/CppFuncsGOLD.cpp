@@ -226,16 +226,15 @@ template <class T> T kruskal(int N, vector<pair<T, pair<int, int>>> edges) {
 }
 
 struct SegmentTree {
-	/** The operation to use for combining two elements. (Must be associative)
-	 */
+	// Edit below
 	lll comb(lll a, lll b) { return a + b; }
-	const lll DEFAULT = 1e18;  // Will overflow if T is an int
+	const lll DEFAULT = 0; 
+	// Edit above
 
 	vector<lll> segtree;
 	lll leng;
 	SegmentTree(lll leng) : leng(leng), segtree(leng * 2, DEFAULT) {}
 
-	/** Sets the value at ind to val. */
 	void set(lll ind, lll val) {
 		assert(0 <= ind && ind < leng);
 		ind += leng;
@@ -245,8 +244,7 @@ struct SegmentTree {
 		}
 	}
 
-	/** @return the minimum element in the range [start, end) */
-	lll range_min(lll start, lll end) {
+	lll range(lll start, lll end) {
 		assert(0 <= start && start < leng && 0 < end && end <= leng);
 		lll sum = DEFAULT;
 		for (start += leng, end += leng; start < end; start /= 2, end /= 2) {
