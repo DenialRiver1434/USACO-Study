@@ -112,7 +112,7 @@ lll min_lis (vector<lll> a) {
 		*upper_bound(A.begin(), A.end(), x) = x;
 		}
   	}
-	return sz(A);
+	return len(A);
 }
 
 // MOD, COMBO
@@ -192,7 +192,7 @@ vector<pair<int, int>> conn[100000]; // location, distance
 lll dist[100000];
 
 void dijkstra(int src) {  // Updates dist, src = starting
-	for (int i = 0; i < N; ++i) dist[i] = lllONG_MAX;
+	for (int i = 0; i < N; ++i) dist[i] = LLONG_MAX;
 	
 	using T = pair<lll, int>;
 	priority_queue<T, vector<T>, greater<T>> pq;
@@ -226,17 +226,17 @@ template <class T> T kruskal(int N, vector<pair<T, pair<int, int>>> edges) {
 }
 
 struct SegmentTree {
+	lll leng;
+	vector<lll> segtree;
+
+	SegmentTree(lll leng) : leng(leng), segtree(leng * 2, DEFAULT) {}
+
 	// Edit below
 	lll comb(lll a, lll b) { return a + b; }
 	const lll DEFAULT = 0; 
 	// Edit above
 
-	vector<lll> segtree;
-	lll leng;
-	SegmentTree(lll leng) : leng(leng), segtree(leng * 2, DEFAULT) {}
-
 	void set(lll ind, lll val) {
-		assert(0 <= ind && ind < leng);
 		ind += leng;
 		segtree[ind] = val;
 		for (; ind > 1; ind /= 2) {
@@ -245,7 +245,6 @@ struct SegmentTree {
 	}
 
 	lll range(lll start, lll end) {
-		assert(0 <= start && start < leng && 0 < end && end <= leng);
 		lll sum = DEFAULT;
 		for (start += leng, end += leng; start < end; start /= 2, end /= 2) {
 			if ((start & 1) != 0) { sum = comb(sum, segtree[start++]); }
@@ -257,6 +256,4 @@ struct SegmentTree {
 
 int main () {
 	int N; // number of vertices
-	vector<pair<lll, pair<int, int>>> edges; // weight, start, end
-	lll ans = krustal(N, edges);
 }
