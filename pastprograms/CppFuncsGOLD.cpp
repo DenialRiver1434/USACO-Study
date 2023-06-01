@@ -2,13 +2,13 @@
 #define mt make_tuple
 #define mp make_pair
 #define is insert
-#define lll long long
-#define vl vector<lll>
-#define sl set<lll>
-#define msl multiset<lll>
-#define pl pair<lll, lll>
-#define vpl vector<pair<lll, lll>>
-#define f0r(i, begin, end) for (lll i = begin; i < end; i ++) 
+#define ll long long
+#define vl vector<ll>
+#define sl set<ll>
+#define msl multiset<ll>
+#define pl pair<ll, ll>
+#define vpl vector<pair<ll, ll>>
+#define f0r(i, begin, end) for (ll i = begin; i < end; i ++) 
 #define len(x) x.size()
 #include <bits/stdc++.h>
 using namespace std;
@@ -24,9 +24,9 @@ using Tree =
 
 // DIVISIBILITY
 
-map<lll, lll> primefactorize(lll N) {
-    map<lll, lll> primefactors;
-    lll tester = 2, c;
+map<ll, ll> primefactorize(ll N) {
+    map<ll, ll> primefactors;
+    ll tester = 2, c;
     while (N != 1) {
         c = 0;
         while ((tester * tester) <= N) {
@@ -102,15 +102,15 @@ int find_lis(vector<int> a) {
 			// we can have a new, longer increasing subsequence!
 			dp.push_back(i);
 		} else {
-			// oh ok, at least we can make the ending element smalller
+			// oh ok, at least we can make the ending element smaller
 			dp[pos] = i;
 		}
 	}
 	return dp.size();
 }
 
-lll min_lis (vector<lll> a) {
-	vector<lll> A;
+ll min_lis (vector<ll> a) {
+	vector<ll> A;
 	for (auto x : a) {
 		x = -x;
 		if (A.empty() || x >= A.back()) {
@@ -124,11 +124,11 @@ lll min_lis (vector<lll> a) {
 
 // MOD, COMBO
 
-lll MOD = 1e9 + 7;
+ll MOD = 1e9 + 7;
 
-lll powermod(lll base, lll exp) {
+ll powermod(ll base, ll exp) {
 	base %= MOD;
-	lll result = 1;
+	ll result = 1;
 	while (exp > 0) {
 		if (exp % 2 == 1) // if n is odd
 			result = result * base % MOD;
@@ -138,8 +138,8 @@ lll powermod(lll base, lll exp) {
 	return result;
 }
 
-lll nPk(lll n, lll k) {
-    lll c = 1;
+ll nPk(ll n, ll k) {
+    ll c = 1;
     if(k == 0) return 1;
     for (int i = (n - k + 1); i <= n; i ++) {
         c = (c * i) % MOD;
@@ -147,9 +147,9 @@ lll nPk(lll n, lll k) {
     return c;
 }
 
-lll nCk(lll n, lll k) {
+ll nCk(ll n, ll k) {
     if(k == 0 || (n == k)) return 1;
-    lll c = nPk(n, k);
+    ll c = nPk(n, k);
     c = (c * powermod(nPk(k, k), MOD - 2));
     return c;
 }
@@ -196,18 +196,18 @@ struct DSU {
 // DIJKSTRA'S
 
 vector<pair<int, int>> conn[100000]; // location, distance
-lll dist[100000];
+ll dist[100000];
 
 void dijkstra(int src) {  // Updates dist, src = starting
 	for (int i = 0; i < N; ++i) dist[i] = LLONG_MAX;
 	
-	using T = pair<lll, int>;
+	using T = pair<ll, int>;
 	priority_queue<T, vector<T>, greater<T>> pq;
 	dist[src] = 0;  
 	pq.push({0, src});
 
 	while (pq.size()) {
-		lll cdist;
+		ll cdist;
 		int node;
 		tie(cdist, node) = pq.top();
 		pq.pop();
@@ -233,17 +233,17 @@ template <class T> T kruskal(int N, vector<pair<T, pair<int, int>>> edges) {
 }
 
 struct SegmentTree {
-	lll leng;
-	vector<lll> segtree;
+	ll leng;
+	vector<ll> segtree;
 
-	SegmentTree(lll leng) : leng(leng), segtree(leng * 2, DEFAULT) {}
+	SegmentTree(ll leng) : leng(leng), segtree(leng * 2, DEFAULT) {}
 
 	// Edit below
-	lll comb(lll a, lll b) { return a + b; }
-	const lll DEFAULT = 0; 
+	ll comb(ll a, ll b) { return a + b; }
+	const ll DEFAULT = 0; 
 	// Edit above
 
-	void set(lll ind, lll val) {
+	void set(ll ind, ll val) {
 		ind += leng;
 		segtree[ind] = val;
 		for (; ind > 1; ind /= 2) {
@@ -251,8 +251,8 @@ struct SegmentTree {
 		}
 	}
 
-	lll range(lll start, lll end) {
-		lll sum = DEFAULT;
+	ll range(ll start, ll end) {
+		ll sum = DEFAULT;
 		for (start += leng, end += leng; start < end; start /= 2, end /= 2) {
 			if ((start & 1) != 0) { sum = comb(sum, segtree[start++]); }
 			if ((end & 1) != 0) { sum = comb(sum, segtree[--end]); }
@@ -260,6 +260,45 @@ struct SegmentTree {
 		return sum;
 	}
 };
+
+// STRING HASHING
+
+const ll A = 972638213777, B = 2305843009213693951;
+ll h[200000], p[200000], cnth[26], cntn[26];
+set<ll> hashed;
+
+ll modmul (ll a, ll b) {
+    __int128 xa = a, xb = b;
+    ll xm = (xa * xb) % B;
+    if(xm < 0) xm += B;
+    return xm;
+}
+
+void hsh (string s) {
+    ll ls = len(s);
+    h[0] = s[0];
+    p[0] = 1;
+    f0r (i, 1, ls) {
+        h[i] = (modmul(h[i - 1], A) + s[i]) % B;
+        p[i] = modmul(p[i - 1], A);
+    }
+}
+
+bool check() {
+    f0r (i, 0, 26) {
+        if(cnth[i] != cntn[i]) return false;
+    }
+    return true;
+}
+
+ll hashrange (ll a, ll b) {
+    if(a == 0) {
+        return h[b];
+    }
+    ll hs = (h[b] - modmul(h[a - 1], p[b - a + 1])) % B;
+    if(hs < 0) hs += B;
+    return hs;
+}
 
 int main () {
 	int N; // number of vertices

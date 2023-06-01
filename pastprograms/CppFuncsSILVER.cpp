@@ -2,13 +2,13 @@
 #define mt make_tuple
 #define mp make_pair
 #define is insert
-#define lll long long
-#define vl vector<lll>
-#define sl set<lll>
-#define msl multiset<lll>
-#define pl pair<lll, lll>
-#define vpl vector<pair<lll, lll>>
-#define f0r(i, begin, end) for (lll i = begin; i < end; i ++) 
+#define ll long long
+#define vl vector<ll>
+#define sl set<ll>
+#define msl multiset<ll>
+#define pl pair<ll, ll>
+#define vpl vector<pair<ll, ll>>
+#define f0r(i, begin, end) for (ll i = begin; i < end; i ++) 
 #define len(x) x.size()
 #include <bits/stdc++.h>
 using namespace std;
@@ -55,10 +55,10 @@ int lowerbound(vector<int> array, int x){
     return lower_bound(array.begin(), array.end(), x) - array.begin();
 }
 
-lll first_true(lll lo, lll hi) {
+ll first_true(ll lo, ll hi) {
 	hi++;
 	while (lo < hi) {
-		lll mid = lo + (hi - lo) / 2;
+		ll mid = lo + (hi - lo) / 2;
 		if (test(mid)) {
 			hi = mid;
 		} else {
@@ -68,10 +68,10 @@ lll first_true(lll lo, lll hi) {
 	return lo;
 }
 
-lll last_true(lll lo, lll hi) {
+ll last_true(ll lo, ll hi) {
 	lo--;
 	while (lo < hi) {
-		lll mid = lo + (hi - lo + 1) / 2;
+		ll mid = lo + (hi - lo + 1) / 2;
 		if (test(mid)) lo = mid;
 		else hi = mid - 1;
 	}
