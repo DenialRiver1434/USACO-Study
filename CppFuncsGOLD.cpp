@@ -264,41 +264,36 @@ struct SegmentTree {
 // STRING HASHING
 
 const ll A = 972638213777, B = 2305843009213693951;
-ll h[200000], p[200000], cnth[26], cntn[26];
-set<ll> hashed;
-
+ll pref[1000005], powmod[1000005], N;
+string s;
+ 
 ll modmul (ll a, ll b) {
-    __int128 xa = a, xb = b;
+    __int128_t xa = a, xb = b;
     ll xm = (xa * xb) % B;
     if(xm < 0) xm += B;
     return xm;
 }
-
+ 
 void hsh (string s) {
     ll ls = len(s);
-    h[0] = s[0];
-    p[0] = 1;
+    pref[0] = s[0];
+    powmod[0] = 1;
     f0r (i, 1, ls) {
-        h[i] = (modmul(h[i - 1], A) + s[i]) % B;
-        p[i] = modmul(p[i - 1], A);
+        pref[i] = (modmul(pref[i - 1], A) + s[i]) % B;
+        powmod[i] = modmul(powmod[i - 1], A);
     }
 }
-
-bool check() {
-    f0r (i, 0, 26) {
-        if(cnth[i] != cntn[i]) return false;
-    }
-    return true;
-}
-
+ 
 ll hashrange (ll a, ll b) {
     if(a == 0) {
-        return h[b];
+        return pref[b - 1];
     }
-    ll hs = (h[b] - modmul(h[a - 1], p[b - a + 1])) % B;
+    ll hs = (pref[b - 1] - modmul(pref[a - 1], powmod[b - a])) % B;
     if(hs < 0) hs += B;
     return hs;
 }
+
+// END
 
 int main () {
 	int N; // number of vertices
