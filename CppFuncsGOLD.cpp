@@ -263,9 +263,9 @@ struct SegmentTree {
 
 // STRING HASHING
 
-const ll A = 972638213777, B = 2305843009213693951;
-ll pref[1000005], powmod[1000005], N;
-string s;
+const ll A = 257274504162904133, B = 1720921529140328231;
+ll pref[1000005], powmod[1000005];
+string S;
  
 ll modmul (ll a, ll b) {
     __int128_t xa = a, xb = b;
@@ -276,10 +276,10 @@ ll modmul (ll a, ll b) {
  
 void hsh (string s) {
     ll ls = len(s);
-    pref[0] = s[0];
+    pref[0] = S[0];
     powmod[0] = 1;
     f0r (i, 1, ls) {
-        pref[i] = (modmul(pref[i - 1], A) + s[i]) % B;
+        pref[i] = (modmul(pref[i - 1], A) + S[i]) % B;
         powmod[i] = modmul(powmod[i - 1], A);
     }
 }
