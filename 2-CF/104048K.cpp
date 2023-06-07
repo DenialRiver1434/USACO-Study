@@ -16,9 +16,12 @@ using namespace std;
 const ll A = 257274504162904133, B = 1720921529140328231;
 ll pref[10][10005], powmod[10][10005], saves[10][10], N, best, standard;
 string S;
+vector<pair<ll, string>> unfil;
 vector<string> Ses;
 vl nums;
- 
+
+// THE FOLLOWING 3 FUNCTIONS ARE ALL PART OF HASHING
+
 ll modmul (ll a, ll b) {
     __int128_t xa = a, xb = b;
     ll xm = (xa * xb) % B;
@@ -44,6 +47,8 @@ ll hashrange (ll a, ll b, ll pos) {
     return hs;
 }
 
+// FUNCTION FOR TESTING A CERTAIN PERMUTATION
+
 void test () {
     ll cur = 0;
     f0r (i, 0, N - 1) {
@@ -53,17 +58,60 @@ void test () {
 }
 
 int main () {
+    // COLLECTING INPUT
     cin >> N;
     f0r (i, 0, N) {
         cin >> S;
-        hsh(S, i);
-        Ses.pb(S);
+        unfil.pb({len(S), S});
+    }
+
+    sort(unfil.begin(), unfil.end()); // SORT BY LENGTH
+    f0r (i, 0, N) {
+        hsh(unfil[i].second, i);
+    }
+
+    // SORTING OUT THE STRINGS THAT ARE SUBSTRINGS OF OTHER STRINGS
+    // Otherwise, testcases such as
+    // 4
+    // abc
+    // cde
+    // efg
+    // bcdef
+    // will WA
+    // The concept is quite easy, I wrote this very messily 
+    f0r (i, 0, N) {
+        bool gud = 1;
+        f0r (j, i + 1, N) {
+            string Si = unfil[i].second, Sj = unfil[j].second;
+            ll li = len(Si), lj = len(Sj);
+            f0r (spot, li, lj + 1) {
+                if(hashrange(0, li, i) == hashrange(spot - li, spot, j)) {
+                    gud = false;
+                    break;
+                }
+            }
+            if(!gud) break;
+        }
+        if(gud) {
+            Ses.pb(unfil[i].second);
+        }
+    }
+
+    // After we weeded out substrings, we need to redo the hashing
+    N = len(Ses);
+    f0r (i, 0, 10) {
+        f0r (j, 0, 10005) {
+            pref[i][j] = 0; powmod[i][j] = 0;
+        }
+    }
+    f0r (i, 0, N) {
+        hsh(Ses[i], i);
         nums.pb(i);
-        standard += len(S);
+        standard += len(Ses[i]);
     }
     best = standard;
-
-    // HASHING
+    
+    // USING HASHING to find the maximum overlap when two spells are used consecutively
     f0r (i, 0, N) {
         f0r (j, 0, N) {
             if(i == j) continue;
@@ -76,7 +124,7 @@ int main () {
         }
     }
 
-    // BASHING
+    // Bashing through all permutations
     test();
     while (next_permutation(nums.begin(), nums.end())) {
         test();
