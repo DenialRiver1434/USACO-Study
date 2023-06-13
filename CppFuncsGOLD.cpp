@@ -276,10 +276,10 @@ ll modmul (ll a, ll b) {
  
 void hsh (string s) {
     ll ls = len(s);
-    pref[0] = S[0];
+    pref[0] = s[0];
     powmod[0] = 1;
     f0r (i, 1, ls) {
-        pref[i] = (modmul(pref[i - 1], A) + S[i]) % B;
+        pref[i] = (modmul(pref[i - 1], A) + s[i]) % B;
         powmod[i] = modmul(powmod[i - 1], A);
     }
 }
