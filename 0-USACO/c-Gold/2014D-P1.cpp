@@ -2,7 +2,7 @@
 #define mt make_tuple
 #define mp make_pair
 #define is insert
-#define ll int
+#define ll long long
 #define vl vector<ll>
 #define sl set<ll>
 #define msl multiset<ll>
@@ -14,12 +14,9 @@
 using namespace std;
 
 bool val[1048576];
-ll dp[20][1048576], N, H, ans = -1;
+ll dp[1048576], N, H, ans = -1;
 vector<tuple<ll, ll, ll>> cows;
-
-bool cmp (tuple<ll, ll, ll> a, tuple<ll, ll, ll> b) {
-    return (get<2>(a) - get<1>(b)) > (get<2>(b) - get<1>(a));
-}
+const ll MAX = -1e18;
 
 int main () {
     ifstream fin; ofstream fout;
@@ -29,7 +26,6 @@ int main () {
         ll a, b, c; fin >> a >> b >> c;
         cows.pb(mt(a, b, c));
     }
-    sort(cows.begin(), cows.end(), cmp);
 
     f0r (i, 0, 1 << N) {
         ll run = 0;
@@ -41,21 +37,16 @@ int main () {
         val[i] = (run >= H);
     }
 
-    f0r (i, 0, N) {
-        ll weight = get<1>(cows[i]), canhold = get<2>(cows[i]);
-        dp[i][1 << i] = canhold;
-        f0r (j, 0, (1 << N)) {
-            if((j & (1 << i)) == 0) {
-                if(i > 0) dp[i][j] = dp[i - 1][j];
-                continue;
-            }
-            if(j == (1 << i)) continue;
-            if(j >= (2 * (1 << i))) continue;
-
-            dp[i][j] = max(-1, min(dp[i - 1][j - (1 << i)] - weight, canhold));
-            if(val[j]) {
-                ans = max(ans, dp[i][j]);
-            }
+    dp[0] = -MAX;
+    f0r (i, 1, (1 << N)) {
+        dp[i] = MAX;
+        f0r (j, 0, N) {
+            if(((1 << j) & i) == 0) continue;
+            ll weight = get<1>(cows[j]), canhold = get<2>(cows[j]);
+            dp[i] = max(dp[i], min(canhold, dp[i - (1 << j)] - weight));
+        }
+        if(val[i]) {
+            ans = max(ans, dp[i]);
         }
     }
 
