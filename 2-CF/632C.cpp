@@ -1,21 +1,26 @@
-#define pb push_back
 #include <bits/stdc++.h>
 using namespace std;
 
-int N;
-string inp;
-vector<string> lstrings;
+int n;
+vector<string> inps;
 
-bool abetterb (string a, string b) {
+bool comp (string a, string b) {
     return (a + b) < (b + a);
 }
 
 int main() {
-    cin >> N;
-    for (int i = 0; i < N; i ++) {
-        cin >> inp;
-        lstrings.pb(inp);
+    cin >> n;
+    // Reading input to inps
+    for (int i = 0; i < n; i ++) {
+        string inp; cin >> inp;
+        inps.push_back(inp);
     }
-    sort(lstrings.begin(), lstrings.end(), abetterb);
-    for (auto l : lstrings) cout << l;
+
+    // Sorting by custom comparator
+    sort(inps.begin(), inps.end(), comp);
+
+    // Printing it all back out in the lexicographically smallest order
+    for (auto l : inps) {
+        cout << l;
+    }
 }
