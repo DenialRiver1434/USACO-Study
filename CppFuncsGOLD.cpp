@@ -10,7 +10,9 @@
 #define vpl vector<pair<ll, ll>>
 #define f0r(i, begin, end) for (ll i = begin; i < end; i ++) 
 #define len(x) x.size()
-#include "bits/stdc++.h"
+#define MAX 1e18
+#define MOD 1e9+7
+#include <bits/stdc++.h>
 using namespace std;
 int N;
 ios_base::sync_with_stdio(0); cin.tie(nullptr);
