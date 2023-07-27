@@ -1,7 +1,6 @@
-#define pb push_back
-#define mt make_tuple
-#define mp make_pair
+#define pb push_back 
 #define is insert
+#define lb lower_bound
 #define ll long long
 #define vl vector<ll>
 #define sl set<ll>
@@ -9,10 +8,13 @@
 #define pl pair<ll, ll>
 #define vpl vector<pair<ll, ll>>
 #define f0r(i, begin, end) for (ll i = begin; i < end; i ++) 
+#define For(i, end, begin) for (ll i = end; i > begin; i --) 
+#define INF 1000000000000000000
+#define IINF 1000000000
+#define MOD 1000000007
 #define len(x) x.size()
-#define MAX 1e18
-#define MOD 1e9+7
-#include <bits/stdc++.h>
+#define fastio ios_base::sync_with_stdio(0); cin.tie(nullptr);
+#include <bits/stdc++.h> 
 using namespace std;
 
 int N;
@@ -78,4 +80,13 @@ ll last_true(ll lo, ll hi) {
 		else hi = mid - 1;
 	}
 	return lo;
+}
+
+// FLOOD FILL PROCESSER
+void process1 (ll x, ll y, ll dist) {
+    if ((x < 0) || (y < 0) || (x >= N) || (y >= N) || grid[x][y] || walldist[x][y] != INF) {
+        return;
+    }
+	walldist[x][y] = dist;
+    q1.push({x, y});
 }
