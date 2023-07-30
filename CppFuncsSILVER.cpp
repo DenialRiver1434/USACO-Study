@@ -10,7 +10,7 @@
 #define f0r(i, begin, end) for (ll i = begin; i < end; i ++) 
 #define For(i, end, begin) for (ll i = end; i > begin; i --) 
 #define INF 1000000000000000000
-#define IINF 1000000000
+#define inf 1000000000
 #define MOD 1000000007
 #define len(x) x.size()
 #define fastio ios_base::sync_with_stdio(0); cin.tie(nullptr);
