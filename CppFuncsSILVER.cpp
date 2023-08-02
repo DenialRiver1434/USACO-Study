@@ -2,18 +2,20 @@
 #define is insert
 #define lb lower_bound
 #define ll long long
-#define vl vector<ll>
-#define sl set<ll>
-#define msl multiset<ll>
+#define v(T) vector<T>
+#define ms(T) multiset<T>
 #define pl pair<ll, ll>
-#define vpl vector<pair<ll, ll>>
+#define F first
+#define S second
+#define pq priority_queue
 #define f0r(i, begin, end) for (ll i = begin; i < end; i ++) 
 #define For(i, end, begin) for (ll i = end; i > begin; i --) 
 #define INF 1000000000000000000
 #define inf 1000000000
 #define MOD 1000000007
-#define len(x) x.size()
-#define fastio ios_base::sync_with_stdio(0); cin.tie(nullptr);
+#define len(x) (ll)x.size()
+#define fileread(file) ifstream fin; fin.open((string)file + (string)".in"); ofstream fout; fout.open((string)file + (string)".out")
+#define fastio ios_base::sync_with_stdio(0); cin.tie(nullptr)
 #include <bits/stdc++.h> 
 using namespace std;
 
