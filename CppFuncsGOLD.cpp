@@ -60,7 +60,7 @@ map<ll, ll> primefactorize(ll N) {
 
 vector<int> factor(int n) {
 	vector<int> ret;
-	for (,Mint i = 2; i * i <= n; i++) {
+	for (int i = 2; i * i <= n; i++) {
 		while (n % i == 0) {
 			ret.push_back(i);
 			n /= i;
