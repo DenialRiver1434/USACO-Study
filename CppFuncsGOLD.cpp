@@ -58,9 +58,9 @@ map<ll, ll> primefactorize(ll N) {
 
 // FACTORS
 
-vector<int> factor(int n) {
-	vector<int> ret;
-	for (int i = 2; i * i <= n; i++) {
+vector<ll> factor(ll n) {
+	vector<ll> ret;
+	for (ll i = 2; i * i <= n; i++) {
 		while (n % i == 0) {
 			ret.push_back(i);
 			n /= i;
@@ -70,13 +70,13 @@ vector<int> factor(int n) {
 	return ret;
 }
 
-void SieveOfEratosthenes(int n) {
+void SieveOfEratosthenes(ll n) {
     bool prime[n + 1];
     memset(prime, true, sizeof(prime));
  
-    for (int p = 2; p * p <= n; p++) {
+    for (ll p = 2; p * p <= n; p++) {
         if (prime[p] == true) {
-            for (int i = p * p; i <= n; i += p)
+            for (ll i = p * p; i <= n; i += p)
                 prime[i] = false;
         }
     }
@@ -89,10 +89,10 @@ void SieveOfEratosthenes(int n) {
 // 1 of each / multiple of each -> Space loop right to left
 
 void knapsack () {
-	int weights[n]; for (int i = 0; i < n; i++) cin >> weights[i];
+	ll weights[n]; for (ll i = 0; i < n; i++) cin >> weights[i];
 	bitset<1000001> possible;
 	possible.set(0);
-	for (int i = 0; i < n; i++) {
+	for (ll i = 0; i < n; i++) {
 		bitset<1000001> temp = possible;
 		temp <<= weights[i];
 		possible = possible | temp;
@@ -101,10 +101,10 @@ void knapsack () {
 
 // LIS (LEAST INCREASING SUBSEQUENCE)
 
-int find_lis(vector<int> a) {
-	vector<int> dp;
-	for (int i : a) {
-		int pos = lower_bound(dp.begin(), dp.end(), i) - dp.begin();
+ll find_lis(vector<ll> a) {
+	vector<ll> dp;
+	for (ll i : a) {
+		ll pos = lower_bound(dp.begin(), dp.end(), i) - dp.begin();
 		if (pos == dp.size()) {
 			// we can have a new, longer increasing subsequence!
 			dp.push_back(i);
@@ -148,7 +148,7 @@ ll powermod(ll base, ll exp) {
 ll nPk(ll n, ll k) {
     ll c = 1;
     if(k == 0) return 1;
-    for (int i = (n - k + 1); i <= n; i ++) {
+    for (ll i = (n - k + 1); i <= n; i ++) {
         c = (c * i) % MOD;
     }
     return c;
@@ -162,16 +162,16 @@ ll nCk(ll n, ll k) {
 }
 
 // TOPOLOGICAL SORT (Kahn)
-queue<int> q;
-int N, M, indegree[100000];
-vector<int> conn[100000];
-vector<int> sorted;
+queue<ll> q;
+ll N, M, indegree[100000];
+vector<ll> conn[100000];
+vector<ll> sorted;
 void ts () {
 	f0r (i, 0, N) {
 		if(indegree[i] == 0) q.push(i);
 	}
 	while(!q.empty()) {
-		int pos = q.front();
+		ll pos = q.front();
 		q.pop();
 		sorted.pb(pos);
 		for (auto c : conn[pos]) {
@@ -182,17 +182,17 @@ void ts () {
 
 // DSU
 struct DSU {
-	vector<int> e;
-	DSU(int N) { e = vector<int>(N, -1); }
+	vector<ll> e;
+	DSU(ll N) { e = vector<ll>(N, -1); }
 
 	// get representive component (uses path compression)
-	int get(int x) { return e[x] < 0 ? x : e[x] = get(e[x]); }
+	ll get(ll x) { return e[x] < 0 ? x : e[x] = get(e[x]); }
 
-	bool same_set(int a, int b) { return get(a) == get(b); }
+	bool same_set(ll a, ll b) { return get(a) == get(b); }
 
-	int size(int x) { return -e[get(x)]; }
+	ll size(ll x) { return -e[get(x)]; }
 
-	bool unite(int x, int y) {  // union by size
+	bool unite(ll x, ll y) {  // union by size
 		x = get(x), y = get(y);
 		if (x == y) return false;
 		if (e[x] > e[y]) swap(x, y);
@@ -202,24 +202,24 @@ struct DSU {
 
 // DIJKSTRA'S
 
-vector<pair<int, int>> conn[100000]; // location, distance
+vector<pair<ll, ll>> conn[100000]; // location, distance
 ll dist[100000];
 
-void dijkstra(int src) {  // Updates dist, src = starting
-	for (int i = 0; i < N; ++i) dist[i] = LLONG_MAX;
+void dijkstra(ll src) {  // Updates dist, src = starting
+	for (ll i = 0; i < N; ++i) dist[i] = LLONG_MAX;
 	
-	using T = pair<ll, int>;
+	using T = pair<ll, ll>;
 	priority_queue<T, vector<T>, greater<T>> pq;
 	dist[src] = 0;  
 	pq.push({0, src});
 
 	while (pq.size()) {
 		ll cdist;
-		int node;
+		ll node;
 		tie(cdist, node) = pq.top();
 		pq.pop();
 		if (cdist != dist[node]) continue;
-		for (pair<int, int> i : conn[node]) {
+		for (pair<ll, ll> i : conn[node]) {
 			if (cdist + i.second < dist[i.first]) {
 				pq.push({dist[i.first] = cdist + i.second, i.first});
 			}
@@ -228,11 +228,11 @@ void dijkstra(int src) {  // Updates dist, src = starting
 }
 
 // MST (krustal)
-template <class T> T kruskal(int N, vector<pair<T, pair<int, int>>> edges) {
+template <class T> T kruskal(ll N, vector<pair<T, pair<ll, ll>>> edges) {
 	sort(edges.begin(), edges.end());
 	T ans = 0;
 	DSU D(N + 1);  // edges that unite are in MST
-	for (pair<T, pair<int, int>> &e : edges) {
+	for (pair<T, pair<ll, ll>> &e : edges) {
 		if (D.unite(e.second.first, e.second.second)) { ans += e.first; }
 	}
 	// -1 if the graph is not connected, otherwise the sum of the edge lengths
@@ -303,5 +303,5 @@ ll hashrange (ll a, ll b) {
 // END
 
 int main () {
-	int N; // number of vertices
+	ll N; // number of vertices
 }
