@@ -9,7 +9,7 @@ using namespace std;
 #define PL pair<ll, ll>
 #define F first
 #define S second
-#define pq priority_queue
+#define PQ priority_queue
 #define f0r(i, begin, end) for (ll i = begin; i < end; i ++) 
 #define For(i, end, begin) for (ll i = end; i > begin; i --) 
 #define all(X) x.begin(), x.end()
@@ -217,11 +217,12 @@ void dijkstra(ll src) {  // Updates dist, src = starting
 		ll cdist;
 		ll node;
 		tie(cdist, node) = pq.top();
+		cdist = -cdist;
 		pq.pop();
 		if (cdist != dist[node]) continue;
 		for (pair<ll, ll> i : conn[node]) {
 			if (cdist + i.second < dist[i.first]) {
-				pq.push({dist[i.first] = cdist + i.second, i.first});
+				pq.push({-(dist[i.first] = cdist + i.second), i.first});
 			}
 		}
 	}
