@@ -217,12 +217,11 @@ void dijkstra(ll src) {  // Updates dist, src = starting
 		ll cdist;
 		ll node;
 		tie(cdist, node) = pq.top();
-		cdist = -cdist;
 		pq.pop();
 		if (cdist != dist[node]) continue;
 		for (pair<ll, ll> i : conn[node]) {
 			if (cdist + i.second < dist[i.first]) {
-				pq.push({-(dist[i.first] = cdist + i.second), i.first});
+				pq.push({dist[i.first] = cdist + i.second, i.first});
 			}
 		}
 	}
