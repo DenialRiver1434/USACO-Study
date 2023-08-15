@@ -131,8 +131,6 @@ ll min_lis (vector<ll> a) {
 
 // MOD, COMBO
 
-ll MOD = 1e9 + 7;
-
 ll powermod(ll base, ll exp) {
 	base %= MOD;
 	ll result = 1;
