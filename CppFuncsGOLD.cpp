@@ -237,6 +237,8 @@ template <class T> T kruskal(ll N, vector<pair<T, pair<ll, ll>>> edges) {
 	return (D.size(1) == N ? ans : -1);
 }
 
+// SegmentTree
+
 struct SegmentTree {
 	ll leng;
 	vector<ll> segtree;
@@ -264,6 +266,44 @@ struct SegmentTree {
 		}
 		return sum;
 	}
+};
+
+struct SegmentTree2 {
+	ll leng;
+	vector<ll> segtree;
+
+	SegmentTree(ll leng) : leng(leng), segtree(leng * 2, DEFAULT) {}
+
+	// Edit below
+	ll comb(ll a, ll b) { return a + b; }
+	const ll DEFAULT = 0; 
+	// Edit above
+
+	void set(ll ind, ll val) {
+		ind += leng;
+		segtree[ind] = val;
+		for (; ind > 1; ind /= 2) {
+			segtree[ind >> 1] = comb(segtree[ind], segtree[ind ^ 1]);
+		}
+	}
+
+	ll range(ll start, ll end) {
+		ll sum = DEFAULT;
+		for (start += leng, end += leng; start < end; start /= 2, end /= 2) {
+			if ((start & 1) != 0) { sum = comb(sum, segtree[start++]); }
+			if ((end & 1) != 0) { sum = comb(sum, segtree[--end]); }
+		}
+		return sum;
+	}
+
+    void change_range (ll start, ll end, ll diff) {
+        set(start, range(start, start + 1) + diff);
+        if (end != leng) { set(end, range(end, end + 1) - diff); }
+    }
+
+    ll get_val (ll pos) {
+        return range(0, pos + 1);
+    }
 };
 
 // STRING HASHING
