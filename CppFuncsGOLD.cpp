@@ -226,30 +226,37 @@ void dijkstra(ll src) {  // Updates dist, src = starting
 }
 
 // MST (krustal)
-template <class T> T kruskal(ll N, vector<pair<T, pair<ll, ll>>> edges) {
-	sort(edges.begin(), edges.end());
-	T ans = 0;
-	DSU D(N + 1);  // edges that unite are in MST
-	for (pair<T, pair<ll, ll>> &e : edges) {
-		if (D.unite(e.second.first, e.second.second)) { ans += e.first; }
-	}
-	// -1 if the graph is not connected, otherwise the sum of the edge lengths
-	return (D.size(1) == N ? ans : -1);
+vector<tuple<ll, ll, ll>> edges, filtered;
+void krustal () {
+    ll tot = N - 1;
+    DSU dsu(N);
+    sort(all(edges));
+    for (auto e : edges) {
+        if (dsu.unite(get<1>(e), get<2>(e))) {
+            filtered.pb(e);
+            if ((--tot) == 0) break;
+        }
+    }
 }
 
 // SegmentTree
 
 struct SegmentTree {
-	ll leng;
 	vector<ll> segtree;
-
-	SegmentTree(ll leng) : leng(leng), segtree(leng * 2, DEFAULT) {}
-
+	ll leng;
+	
 	// Edit below
 	ll comb(ll a, ll b) { return a + b; }
 	const ll DEFAULT = 0; 
 	// Edit above
-
+ 
+	SegmentTree(ll N) {
+        leng = N;
+        f0r (i, 0, 2 * N) {
+            segtree.pb(0);
+        }
+    }
+ 
 	void set(ll ind, ll val) {
 		ind += leng;
 		segtree[ind] = val;
@@ -257,7 +264,7 @@ struct SegmentTree {
 			segtree[ind >> 1] = comb(segtree[ind], segtree[ind ^ 1]);
 		}
 	}
-
+ 
 	ll range(ll start, ll end) {
 		ll sum = DEFAULT;
 		for (start += leng, end += leng; start < end; start /= 2, end /= 2) {
