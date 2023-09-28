@@ -99,6 +99,48 @@ void knapsack () {
 	}
 }
 
+// DIGIT DP
+void DDP () {
+    V<ll> number;
+    while (n > 0) {
+        number.pb(n % 10);
+        n /= 10;
+    }
+    reverse(all(number));
+    memset(dp, 0, sizeof(dp));
+    
+    f0r (i, 0, 10) {
+        if (i > number[0]) continue;
+        bool under = i < number[0];
+        dp[1][i][under] ++;
+    }
+
+    f0r (i, 1, len(number)) {
+        f0r (n1, 0, 150) {
+            f0r (newdigit, 0, 10) {
+                if (newdigit > number[i]) {
+                    // isunder (1 -> 1)
+                    dp[i + 1][n1 + newdigit][1] += dp[i][n1][1];
+                }
+                else if (newdigit == number[i]) {
+                    // isunder (1 -> 1)
+                    dp[i + 1][n1 + newdigit][1] += dp[i][n1][1];
+
+                    // isunder (0 -> 0)
+                    dp[i + 1][n1 + newdigit][0] += dp[i][n1][0];
+                }
+                else {
+                    // isunder (1 -> 1)
+                    dp[i + 1][n1 + newdigit][1] += dp[i][n1][1];
+
+                    // isunder (0 -> 1)
+                    dp[i + 1][n1 + newdigit][1] += dp[i][n1][0];
+                }
+            }
+        }
+    }
+}
+
 // LIS (LEAST INCREASING SUBSEQUENCE)
 
 ll find_lis(vector<ll> a) {
