@@ -1,68 +1,68 @@
-#define pb push_back
-#define mt make_tuple
-#define mp make_pair
+#include <bits/stdc++.h> 
+using namespace std;
+#define pb push_back 
 #define is insert
 #define ll long long
-#define f0r(i, begin, end) for (ll i = begin; i < end; i ++) 
-#define len(x) x.length()
-#include <bits/stdc++.h>
-using namespace std;
+#define V vector
+#define MS multiset
+#define PL pair<ll, ll>
+#define F first
+#define S second
+#define PQ priority_queue
+#define f0r(i, begin, finish) for (ll i = begin; i < finish; i ++) 
+#define For(i, finish, begin) for (ll i = finish; i > begin; i --) 
+#define all(x) x.begin(), x.end()
+#define INF 1000000000000000000LL
+#define inf 1000000000
+#define MOD 998244353
+#define len(x) (ll)x.size()
+#define fileread(file) ifstream fin; fin.open((string)file + ".in"); ofstream fout; fout.open((string)file + ".out")
+#define fastio ios_base::sync_with_stdio(0); cin.tie(nullptr)
+template<typename T> istream& operator>>(istream& in, V<T>& a) {for(auto &x : a) in >> x; return in;};
+template<typename T> ostream& operator<<(ostream& out, V<T>& a) {for(auto &x : a) out << x << ' '; return out;};
 
-ll N, K;
+const ll MAX_N = 100;
 
-int dist (int a, int b) {
-	if (a < b) return b - a;
-	else return b - a + N;
-}
+ll N, K, dp[MAX_N][MAX_N][8], cnt[MAX_N];
 
 int main () {
-	ios_base::sync_with_stdio(0); cin.tie(nullptr);
-	ifstream fin; ofstream fout;
-	fin.open("cbarn2.in"); fout.open("cbarn2.out");
+    fileread("cbarn2");
 
-	fin >> N >> K;
-	ll arr[N];
-	f0r (i, 0, N) fin >> arr[i];
+    f0r (i, 0, MAX_N) {
+        f0r (j, 0, MAX_N) {
+            f0r (k, 1, 8) dp[i][j][k] = INF;
+        }
+    }
 
-	ll best[N][N][K + 1]; // best[a][b][c] -> best outcome for the range [a, b) with at least a door at a, and c doors total. If a >= b (3, 0, 2)
-	f0r (i, 0, N) {
-		f0r (j, 0, N) {
-			f0r (k, 0, K + 1) {
-				best[i][j][k] = 0;
-			}
-		}
-	}
+    fin >> N >> K;
+    f0r (i, 0, N) {
+        fin >> cnt[i];
+    }
+     
+    // k = 1
+    f0r (st, 0, N) {
+        ll tot = 0;
+        f0r (i, 0, N) {
+            ll en = (st + i) % N;
+            tot += i * cnt[en];
+            dp[st][(en + 1) % N][1] = tot;
+        }
+    }
 
-	// k = 1
-	f0r (i, 0, N) {
-		f0r (j, 0, N) {
-			ll walked = 0;
-			for (ll k = i; (k != j) || (walked == 0); k = (k + 1) % N) {
-				best[i][j][1] += walked * arr[k];
-				walked ++;
-			}
-		}
-	}
+    f0r (k, 2, K + 1) {
+        f0r (st, 0, N) {
+            f0r (i, 0, N) {
+                ll en = (st + i + 1) % N;
+                for (ll mid = (st + 1) % N; mid != en; mid = (mid + 1) % N) {
+                    dp[st][en][k] = min(dp[st][en][k], dp[st][mid][k - 1] + dp[mid][en][1]);
+                }
+            }
+        }
+    }
 
-	f0r (c, 2, K + 1) {
-		f0r (a, 0, N) {
-			f0r (b, 0, N) {
-				ll optimal = 1e18;
-				if(dist(a, b) <= c) {
-					continue;
-				}
-
-				for (ll k = (a + 1) % N; k != b; k = (k + 1) % N) {
-					optimal = min(optimal, best[a][k][1] + best[k][b][c - 1]);
-				}
-				best[a][b][c] = optimal;
-			}
-		}
-	}
-	
-	ll ans = 1e18;
-	f0r (i, 0, N) {
-		ans = min(ans, best[i][i][K]);
-	}
-	fout << ans << endl;
+    ll bst = INF;
+    f0r (i, 0, N) {
+        bst = min(bst, dp[i][i][K]);
+    }
+    fout << bst << endl;
 }
