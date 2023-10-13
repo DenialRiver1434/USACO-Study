@@ -2,13 +2,13 @@
 #define is insert
 #define lb lower_bound
 #define ll long long
-#define vl vector<ll>
-#define sl set<ll>
-#define msl multiset<ll>
-#define pl pair<ll, ll>
-#define vpl vector<pair<ll, ll>>
-#define f0r(i, begin, end) for (ll i = begin; i < end; i ++) 
-#define For(i, end, begin) for (ll i = end; i > begin; i --) 
+#define vl vector<int>
+#define sl set<int>
+#define msl multiset<int>
+#define pl pair<int, int>
+#define vpl vector<pair<int, int>>
+#define f0r(i, begin, end) for (int i = begin; i < end; i ++) 
+#define For(i, end, begin) for (int i = end; i > begin; i --) 
 #define INF 1000000000000000000
 #define IINF 1000000000
 #define MOD 1000000007
@@ -19,13 +19,13 @@ using namespace std;
 
 bool grid[1000][1000]; // 1 = wall, 0 = free
 vpl robotspawn;
-ll walldist[1000][1000], centerpos[1000][1000], N, D;
+int walldist[1000][1000], centerpos[1000][1000], N, D;
 queue<pl> q1, q2;
-priority_queue<tuple<ll, ll, ll>> pq;
+priority_queue<tuple<int, int, int>> pq;
 
-ll power[1000][1000];
+int power[1000][1000];
 
-void process1 (ll x, ll y, ll dist) {
+void process1 (int x, int y, int dist) {
     if ((x < 0) || (y < 0) || (x >= N) || (y >= N)) {
         return;
     }
@@ -34,7 +34,7 @@ void process1 (ll x, ll y, ll dist) {
     q1.push({x, y});
 }
 
-bool process2 (ll x, ll y, ll dist) {
+bool process2 (int x, int y, int dist) {
     if ((x < 0) || (y < 0) || (x >= N) || (y >= N)) {
         return false;
     }
@@ -45,7 +45,7 @@ bool process2 (ll x, ll y, ll dist) {
     return ((dist / D) < walldist[x][y]);
 }
 
-void process3 (ll x, ll y, ll pow) {
+void process3 (int x, int y, int pow) {
     if ((x < 0) || (y < 0) || (x >= N) || (y >= N) || (pow < 0)) {
         return;
     }
@@ -78,7 +78,7 @@ int main () {
         }
     }
     while (!q1.empty()) {
-        ll x, y;
+        int x, y;
         tie(x, y) = q1.front();
         q1.pop();
         process1(x + 1, y, walldist[x][y] + 1);
@@ -87,7 +87,7 @@ int main () {
         process1(x, y + 1, walldist[x][y] + 1);
     }
     while (!q2.empty()) {
-        ll x, y;
+        int x, y;
         tie(x, y) = q2.front();
         q2.pop();
         if(process2(x + 1, y, centerpos[x][y] + 1)) {
@@ -113,7 +113,7 @@ int main () {
         }
     }
     while (!pq.empty()) {
-        ll pow, x, y; tie(pow, x, y) = pq.top();
+        int pow, x, y; tie(pow, x, y) = pq.top();
         pq.pop();
         if (power[x][y] >= pow) continue;
         power[x][y] = pow;
@@ -123,7 +123,7 @@ int main () {
         process3 (x, y + 1, pow - 1);
     }
 
-    ll tc = 0;
+    int tc = 0;
     f0r (i, 0, N) {
         f0r (j, 0, N) {
             tc += (power[i][j] >= 0);

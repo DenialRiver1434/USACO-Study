@@ -417,7 +417,7 @@ void hsh (string s) {
         powmod[i] = modmul(powmod[i - 1], A);
     }
 }
- 
+
 ll hashrange (ll a, ll b) {
     if(a == 0) {
         return pref[b - 1];
