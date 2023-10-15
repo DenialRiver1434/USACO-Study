@@ -1,66 +1,72 @@
-#define pb push_back
-#define mp make_pair
-#define mt make_tuple
-#define is insert
-#define lll long long
-#define f0r(i, begin, n) for (lll i = begin; i < n; i ++)
-#define len(x) x.size()
-#define vl vector<lll>
-#define sl set<lll>
-#define msl multiset<lll>
-#define pl pair<lll, lll>
-#define vpl vector<pair<lll, lll>>
-#include <bits/stdc++.h>
+#include <bits/stdc++.h> 
 using namespace std;
+#define pb push_back 
+#define is insert
+#define ll long long
+#define V vector
+#define MS multiset
+#define PL pair<ll, ll>
+#define F first
+#define S second
+#define PQ priority_queue
+#define f0r(i, begin, finish) for (ll i = begin; i < finish; i ++) 
+#define For(i, finish, begin) for (ll i = finish; i > begin; i --) 
+#define all(x) x.begin(), x.end()
+#define INF 1000000000000000000LL
+#define inf 1000000000
+#define MOD 1000000007
+#define len(x) (ll)x.size()
+#define fileread(file) ifstream fin; fin.open((string)file + ".in"); ofstream fout; fout.open((string)file + ".out")
+#define fastio ios_base::sync_with_stdio(0); cin.tie(nullptr)
+template<typename T> istream& operator>>(istream& in, V<T>& a) {for(auto &x : a) in >> x; return in;};
+template<typename T> ostream& operator<<(ostream& out, V<T>& a) {for(auto &x : a) out << x << ' '; return out;};
 
-const lll MOD = 1e9 + 7;
-sl conn[200000];
-lll cnt[200000][3], N, K; // 0 = black, 1 = white
-short color[200000];
+const ll MAX_N = 1e5;
+ll dp[MAX_N][3], col[MAX_N];
+V<ll> conn[MAX_N];
 
-void search(lll pos, lll prev) {
-	lll mdiff = 0;
-	cnt[pos][0] = 1, cnt[pos][1] = 1, cnt[pos][2] = 1;
-	if(color[pos] == 1) {
-		cnt[pos][1] = 0;
-		cnt[pos][2] = 0;
-	}
-	if(color[pos] == 2) {
-		cnt[pos][0] = 0;
-		cnt[pos][2] = 0;
-	}
-	if(color[pos] == 3) {
-		cnt[pos][0] = 0;
-		cnt[pos][1] = 0;
-	}
+void dfs (ll pos, ll pre) {
+    for (auto c : conn[pos]) {
+        if (c != pre) {
+            dfs (c, pos);
+        }
+    }
+    f0r (i, 0, 3) {
+        if (col[pos] == -1) { dp[pos][i] = 1; }
+        else { dp[pos][i] = (i == col[pos]); }
 
-	for (auto c : conn[pos]) {
-		if(c != prev) {
-			search(c, pos);
-			cnt[pos][0] *= (cnt[c][1] + cnt[c][2]); cnt[pos][0] %= MOD;
-			cnt[pos][1] *= (cnt[c][0] + cnt[c][2]); cnt[pos][1] %= MOD;
-			cnt[pos][2] *= (cnt[c][0] + cnt[c][1]); cnt[pos][2] %= MOD;
-		}
-	}
+        for (auto c : conn[pos]) {
+            if (c != pre) {
+                ll opt = 0;
+                f0r (j, 0, 3) {
+                    if (i != j) {
+                        opt += dp[c][j];
+                        opt %= MOD;
+                    }
+                }
+                dp[pos][i] *= opt;
+                dp[pos][i] %= MOD;
+            }
+        }
+    }
 }
 
-int main() {
-	ios_base::sync_with_stdio(0); cin.tie(nullptr);
-	ifstream fin; ofstream fout;
-	fin.open("barnpainting.in"); fout.open("barnpainting.out");
+int main () {
+	fileread("barnpainting");
 
-	fin >> N >> K;
-	f0r (i, 0, N - 1) {
-		lll a, b; fin >> a >> b;
-		conn[a - 1].is(b - 1);
-		conn[b - 1].is(a - 1);
-		color[a] = 0;
-	}
-	color[N - 1] = 0;
-	f0r (i, 0, K) {
-		lll a, b; fin >> a >> b;
-		color[a - 1] = b;
-	}
-	search(0, -1);
-	fout << (cnt[0][0] + cnt[0][1] + cnt[0][2]) % MOD << endl;
+    ll N, K; fin >> N >> K;
+    col[0] = -1;
+    f0r (i, 1, N) {
+        col[i] = -1;
+        ll a, b; fin >> a >> b;
+        conn[a - 1].pb(b - 1);
+        conn[b - 1].pb(a - 1);
+    }
+    f0r (i, 0, K) {
+        ll a, b; fin >> a >> b;
+        col[a - 1] = b - 1;
+    }
+
+    dfs (0, -1);
+    fout << (dp[0][0] + dp[0][1] + dp[0][2] + MOD) % MOD << endl;
 }
