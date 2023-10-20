@@ -28,26 +28,21 @@ ios_base::sync_with_stdio(0); cin.tie(nullptr);
 // COORD COMPRESS
 
 void twodcoordcomp() {
-	int getCompressedIndex(int a, vector<int> indices) {
-		return lower_bound(indices.begin(), indices.end(), a) - indices.begin();
-	}
-	int a, b;
-	vector<int> xs, ys;
-	vector<tuple<int, int>> inps, coords;
-
+	vector<ll> xs, ys;
+	vector<PL> inps;
 	for (int i = 0; i < N; i ++) {
+	    ll a, b;
 		cin >> a >> b;
-		int x = max(a, b), y = min(a, b);
-		xs.pb(x);
-		ys.pb(y);
-		inps.pb(mt(x, y));
+		xs.pb(a); ys.pb(b);
+		inps.pb({a, b});
 	}
-	sort(xs.begin(), xs.end());
-	sort(ys.begin(), ys.end());
+	sort(all(xs));
+	sort(all(ys));
 
 	for (auto pair : inps) {
-		int cx = getCompressedIndex(get<0>(pair), xs), cy = getCompressedIndex(get<1>(pair), ys);
-		coords.pb(mt(cx, cy));
+		ll cx = lower_bound(all(xs), pair.F) - xs.begin(), cy = lower_bound(all(ys), pair.S) - ys.begin();
+        if (seen[cx][cy]) continue;
+        seen[cx][cy] = 1;
 	}
 }
 
