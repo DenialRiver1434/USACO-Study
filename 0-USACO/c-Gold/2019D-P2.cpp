@@ -21,69 +21,85 @@ using namespace std;
 template<typename T> istream& operator>>(istream& in, V<T>& a) {for(auto &x : a) in >> x; return in;};
 template<typename T> ostream& operator<<(ostream& out, V<T>& a) {for(auto &x : a) out << x << ' '; return out;};
 
-struct LCA {
-    vector<ll> height, euler, first, segtree;
-    vector<bool> visited;
-    ll n;
- 
-    LCA(vector<vector<ll>> &adj, ll root = 0) {
-        n = adj.size();
-        height.resize(n);
-        first.resize(n);
-        euler.reserve(n * 2);
-        visited.assign(n, false);
-        dfs(adj, root);
-        ll m = euler.size();
-        segtree.resize(m * 4);
-        build(1, 0, m - 1);
+const ll MAX_N = 1e5 + 5;
+
+V<ll> conn[MAX_N];
+ll N, M, appear[MAX_N];
+
+ll TN;
+V<PL> segtree;
+
+PL f (PL a, PL b) {
+    if (a.F < b.F) return a;
+    else return b;
+}
+
+void set_val (ll pos, PL val) {
+    pos += TN;
+    segtree[pos] = val;
+    while (pos > 1) {
+        ll npos = pos / 2;
+        if (pos % 2 == 0) {
+            segtree[npos] = f(segtree[pos], segtree[pos + 1]);
+        }
+        else {
+            segtree[npos] = f(segtree[pos], segtree[pos - 1]);
+        }
+        pos = npos;
     }
- 
-    void dfs(vector<vector<ll>> &adj, ll node, ll h = 0) {
-        visited[node] = true;
-        height[node] = h;
-        first[node] = euler.size();
-        euler.push_back(node);
-        for (auto to : adj[node]) {
-            if (!visited[to]) {
-                dfs(adj, to, h + 1);
-                euler.push_back(node);
-            }
+}
+
+V<PL> sorder;
+
+ll lca (ll x, ll y) {
+    if (appear[x] > appear[y]) swap(x, y);
+    ll start = appear[x], finish = appear[y] + 1;
+    PL ans = {INF, -1};
+    start += TN; finish += TN;
+    while (start < finish) {
+        if (start % 2 == 1) {
+            ans = f(ans, segtree[start]);
+            start ++;
+        }
+        if (finish % 2 == 1) {
+            finish --;
+            ans = f(ans, segtree[finish]);
+        }
+        start /= 2; finish /= 2;
+    }
+    return ans.S;
+}
+
+ll t1 = 0;
+void dfs (ll pos, ll pre, ll d) {
+    if (pos == 0) {
+        TN = 2 * N;
+        segtree = V<PL>(2 * TN, {INF, -1});
+    }
+    
+    appear[pos] = t1;
+    set_val(t1 ++, {d, pos});
+    sorder.pb({d, pos});
+    for (auto c : conn[pos]) {
+        if (c != pre) {
+            dfs (c, pos, d + 1);
+            set_val(t1 ++, {d, pos});
+            sorder.pb({d, pos});
         }
     }
- 
-    void build(ll node, ll b, ll e) {
-        if (b == e) {
-            segtree[node] = euler[b];
-        } else {
-            ll mid = (b + e) / 2;
-            build(node << 1, b, mid);
-            build(node << 1 | 1, mid + 1, e);
-            ll l = segtree[node << 1], r = segtree[node << 1 | 1];
-            segtree[node] = (height[l] < height[r]) ? l : r;
-        }
-    }
- 
-    ll query(ll node, ll b, ll e, ll L, ll R) {
-        if (b > R || e < L)
-            return -1;
-        if (b >= L && e <= R)
-            return segtree[node];
-        ll mid = (b + e) >> 1;
- 
-        ll left = query(node << 1, b, mid, L, R);
-        ll right = query(node << 1 | 1, mid + 1, e, L, R);
-        if (left == -1) return right;
-        if (right == -1) return left;
-        return height[left] < height[right] ? left : right;
-    }
- 
-    ll lca(ll u, ll v) {
-        ll left = first[u], right = first[v];
-        if (left > right)
-            swap(left, right);
-        return query(1, 0, euler.size() - 1, left, right);
-    }
-};
+}
+
+ll start[MAX_N], finish[MAX_N], timer = 0;
+
+void euler_tour (ll pos, ll pre) {
+	start[pos] = timer ++;
+	for (auto c : conn[pos]) {
+		if (c != pre) {
+			euler_tour(c, pos);
+		}
+	}
+	finish[pos] = timer;
+}
 
 struct SegmentTree {
 	vector<ll> segtree;
@@ -118,83 +134,56 @@ struct SegmentTree {
 		return sum;
 	}
 };
- 
-V<ll> start, finish;
-V<V<ll>> conn;
-ll timer = 0;
-void euler_tour (ll pos, ll pre) {
-	start[pos] = timer ++;
-	for (auto c : conn[pos]) {
-		if (c != pre) {
-			euler_tour(c, pos);
-		}
-	}
-	finish[pos] = timer;
-}
 
-V<ll> colors[100002];
+bool ans[MAX_N];
+bool on[MAX_N];
+V<ll> bycolor[MAX_N];
+V<tuple<ll, ll, ll>> queries[MAX_N];
 
 int main () {
-	fileread("milkvisits");
+    fileread("milkvisits");
 
-    ll N, M; fin >> N >> M;
-	start = finish = V<ll>(N);
-	conn = V<V<ll>>(N);
-
-	f0r (i, 0, N) {
-		ll a; fin >> a;
-		colors[a - 1].pb(i);
-	}
-
-    f0r (i, 0, N - 1) {
+    fin >> N >> M;
+    f0r (i, 0, N) {
+        ll a; fin >> a;
+        bycolor[a].pb(i);
+    }
+    f0r (i, 1, N) {
         ll a, b; fin >> a >> b;
         conn[a - 1].pb(b - 1);
         conn[b - 1].pb(a - 1);
     }
-
+    f0r (i, 0, M) {
+        ll a, b, c; fin >> a >> b >> c;
+        queries[c].pb({a - 1, b - 1, i});
+    }
+    dfs (0, -1, 0);
     euler_tour (0, -1);
 
-	// Segtree from USACO Guide section
-	SegmentTree segtree(N + 1);
-	
-	// LCA code from Benq
-	LCA lca(conn);
+    SegmentTree segtree (N + 2);
+    f0r (col, 1, N + 1) {
+        for (auto i : bycolor[col - 1]) {
+            segtree.set(start[i], 0);
+            segtree.set(finish[i], 0);
+            on[i] = 0;
+        }
+        for (auto i : bycolor[col]) {
+            segtree.set(start[i], segtree.range(start[i], start[i] + 1) + 1);
+            segtree.set(finish[i], segtree.range(finish[i], finish[i] + 1) - 1);
+            on[i] = 1;
+        }
+        for (auto q : queries[col]) {
+            ll p1, p2, anspos;
+            tie(p1, p2, anspos) = q;
+            ll mpos = lca (p1, p2);
+            ll dist1 = segtree.range(0, start[p1] + 1);
+            ll dist2 = segtree.range(0, start[p2] + 1);
+            ll dist3 = 2 * segtree.range(0, start[mpos] + 1);
+            ans[anspos] = (dist1 + dist2 - dist3 + on[mpos]) > 0;
+        }
+    }
 
-	// Sort the queries by color
-	V<tuple<ll, ll, ll, ll>> queries;
-	f0r (i, 0, M) {
-		ll a, b, c; fin >> a >> b >> c;
-		queries.pb({c - 1, a - 1, b - 1, i});
-	}
-	sort(all(queries));
-
-	bitset<100001> ans, good;
-	ll pre = 100001;
-	for (auto q : queries) {
-		ll color, a, b, pos;
-		tie(color, a, b, pos) = q;
-
-		if (color != pre) {
-			for (auto p : colors[pre]) {
-				segtree.set(start[p], 0);
-				segtree.set(finish[p], 0);
-				good[p] = 0;
-			}
-			for (auto p : colors[color]) {
-				segtree.set(start[p], segtree.range(start[p], start[p] + 1) + 1);
-				segtree.set(finish[p], segtree.range(finish[p], finish[p] + 1) - 1);
-				good[p] = 1;
-			}
-		}
-		pre = color;
-		ll dista = segtree.range(0, start[a] + 1);
-		ll distb = segtree.range(0, start[b] + 1);
-		ll distc = 2 * segtree.range(0, start[lca.lca(a, b)] + 1);
-
-		ans[pos] = (dista + distb - distc + good[lca.lca(a, b)] > 0);
-	}
-
-	f0r (i, 0, M) {
-		fout << ans[i];
-	}
+    f0r (i, 0, M) {
+        fout << ans[i];
+    }
 }
