@@ -74,7 +74,7 @@ void SieveOfEratosthenes(ll n) {
     bool prime[n + 1];
     memset(prime, true, sizeof(prime));
  
-    for (ll p = 2; p * p <= n; p++) {
+    for (ll p = 2; p <= n; p++) {
         if (prime[p] == true) {
             for (ll i = p * p; i <= n; i += p)
                 prime[i] = false;
@@ -173,13 +173,15 @@ ll min_lis (vector<ll> a) {
 
 // MOD, COMBO
 
-ll powermod(ll base, ll exp) {
-	base %= MOD;
+ll fact[3000000];
+
+ll powermod(ll base, ll exp, ll mod = MOD) {
+	base %= mod;
 	ll result = 1;
 	while (exp > 0) {
 		if (exp % 2 == 1) // if n is odd
-			result = result * base % MOD;
-		base = base * base % MOD;
+			result = result * base % mod;
+		base = base * base % mod;
 		exp /= 2; // divide by two
 	}
 	return result;
@@ -195,9 +197,10 @@ ll nPk(ll n, ll k) {
 }
 
 ll nCk(ll n, ll k) {
-    if(k == 0 || (n == k)) return 1;
-    ll c = nPk(n, k);
-    c = (c * powermod(nPk(k, k), MOD - 2));
+    if (k == 0 || (n == k)) return 1;
+    ll c = fact[n];
+    c = (c * powermod(fact[k], MOD - 2)) % MOD;
+    c = (c * powermod(fact[n - k], MOD - 2)) % MOD;
     return c;
 }
 
