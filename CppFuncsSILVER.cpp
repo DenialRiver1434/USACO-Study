@@ -21,6 +21,8 @@ using namespace std;
 #define fastio ios_base::sync_with_stdio(0); cin.tie(nullptr)
 template<typename T> istream& operator>>(istream& in, vector<T>& a) {for(auto &x : a) in >> x; return in;};
 template<typename T> ostream& operator<<(ostream& out, vector<T>& a) {for(auto &x : a) out << x << ' '; return out;};
+template<typename T> istream& operator>>(istream& in, pair<T, T>& a) {in >> a.F >> a.S; return in;};
+template<typename T> ostream& operator<<(ostream& out, pair<T, T>& a) {out << a.F << ' ' << a.S << endl; return out;};
 
 int N;
 ios_base::sync_with_stdio(0); cin.tie(nullptr);
