@@ -173,7 +173,7 @@ ll min_lis (vector<ll> a) {
 	return len(A);
 }
 
-// MOD, COMBO
+// MOD, COMBO (Binary exponentation)
 
 ll fact[3000000];
 
@@ -383,15 +383,34 @@ struct LCA {
 
 // STRING HASHING
 
-const ll A = 257274504162904133, B = 1720921529140328231;
-ll pref[1000005], powmod[1000005];
-string S;
- 
+// Uses Gcc supported __int128_t
+
 ll modmul (ll a, ll b) {
     __int128_t xa = a, xb = b;
     ll xm = (xa * xb) % B;
     if(xm < 0) xm += B;
     return xm;
+}
+
+const ll A = 257274504162904133, B = 1720921529140328231;
+ll pref[1000005], powmod[1000005];
+string S;
+
+// Slower modmul for debugging
+
+ll modmul (ll a, ll b) {
+	// SWITCH TO TRADITIONAL MODMUL BEFORE SUBMISSION
+	ll ans = 0;
+	while (b > 0) {
+		if (b % 2) {
+			ans += a;
+			ans %= B;
+		}
+		a += a;
+		a %= B;
+		b /= 2;
+	}
+    return ans;
 }
  
 void hsh (string s) {
