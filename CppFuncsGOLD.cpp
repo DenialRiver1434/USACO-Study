@@ -12,7 +12,7 @@ using namespace std;
 #define PQ priority_queue
 #define f0r(i, begin, end) for (ll i = begin; i < end; i ++) 
 #define For(i, end, begin) for (ll i = end; i > begin; i --) 
-#define all(X) x.begin(), x.end()
+#define all(x) x.begin(), x.end()
 #define INF 1000000000000000000
 #define inf 1000000000
 #define MOD 1000000009
