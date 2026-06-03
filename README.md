@@ -1,7 +1,7 @@
 # USACO Study Archive (2022-2023)
 
 This is a public collection of implementations to most of the competition programming problems I have solved
-in 2022 and 2023. Note that I have not mostly stopped uploading solutions since December 2023. 
+in 2022 and 2023. Note that I have mostly stopped uploading solutions since December 2023 to this repository. 
 
 ### Correctness
 
