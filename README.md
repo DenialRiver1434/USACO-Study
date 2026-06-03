@@ -1,14 +1,13 @@
-# USACO-Study
+# USACO Study Archive (2022-2023)
 
-This is a public collection of implementations to all the competition programming problems I have solved!
+This is a public collection of implementations to most of the competition programming problems I have solved
+in 2022 and 2023. Note that I have not mostly stopped uploading solutions since December 2023. 
 
 ### Correctness
 
 All of the code stored here are capable of earning AC on all testcases, though a very few might have small bugs. 
 
-I apologize if some of the code is stored in the wrong folder or under the wrong name, which is an issue that occasionally occurs.
-
 ### Using this Repository
 
-You may not pass of the code in this repository as your own (plagarize), but you may use it for educational purposes. However, unlike
-code I upload to usaco.guide or write in lecture notes, most of these are NOT written to be understandable. 
+Unlike code I upload to usaco.guide or write in lecture notes, most of these are not written to be understandable;
+the repository is preserved more for archival purposes.
